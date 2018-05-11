@@ -2,22 +2,18 @@ package web
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
-func GetResponse(url string) string {
+func GetResponse(url string) (*http.Response, error)  {
 	resp, err := http.Get(url)
 	if err != nil {
 		// handle error
 		fmt.Println(err)
 
-		return "N/A"
+		fmt.Errorf("failed to execute request: %v", err)
+		return nil, err
 	}
 
-	defer resp.Body.Close()
-
-	contents, err := ioutil.ReadAll(resp.Body)
-
-	return string(contents)
+	return resp, nil
 }
