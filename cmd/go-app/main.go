@@ -1,30 +1,28 @@
 package main
 
 import (
-	"fmt"
 	"go-learning-app/pkg/web"
 	"log"
+	"fmt"
+	"io/ioutil"
 )
 
 func main() {
-	r, err := web.GetResponse("https://www.google.co.uk")
+	r, err := web.GetResponse("https://www.twitter.com")
 	defer r.Body.Close()
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	fmt.Println("*** Header ***")
-	for k, v := range r.Header {
-		fmt.Println("Header field " + string(k))
-
-		for a := range v {
-			fmt.Println(a)
-		}
-
+	for e, v := range r.Header {
+		fmt.Println(e + " - " + v[0])
 	}
 
-	fmt.Println("*** Body ***")
+	fmt.Println("***")
 
-	fmt.Println(r.Body)
+	contents, err := ioutil.ReadAll(r.Body)
+
+	println(string(contents))
+
 }
