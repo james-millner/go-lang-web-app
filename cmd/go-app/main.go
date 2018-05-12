@@ -4,11 +4,10 @@ import (
 	"go-learning-app/pkg/web"
 	"log"
 	"fmt"
-	"io/ioutil"
 )
 
 func main() {
-	r, err := web.GetResponse("https://www.twitter.com")
+	r, err := web.GetResponse("https://thenextweb.com/")
 	defer r.Body.Close()
 
 	if err != nil {
@@ -19,10 +18,5 @@ func main() {
 		fmt.Println(e + " - " + v[0])
 	}
 
-	fmt.Println("***")
-
-	contents, err := ioutil.ReadAll(r.Body)
-
-	println(string(contents))
-
+	web.Translate(r)
 }
