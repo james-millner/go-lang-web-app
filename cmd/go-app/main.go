@@ -1,22 +1,27 @@
 package main
 
 import (
-	"go-learning-app/pkg/web"
-	"log"
+	"os"
 	"fmt"
+	"go-learning-app/pkg/web"
 )
 
 func main() {
-	r, err := web.GetResponse("https://thenextweb.com/")
-	defer r.Body.Close()
+
+	url := os.Args[1]
+
+	fmt.Println(url)
+
+	r, err := web.GetResponse(url)
 
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Errorf("Couldn't get a response from: " + url, err)
 	}
 
-	for e, v := range r.Header {
-		fmt.Println(e + " - " + v[0])
-	}
+	doc := web.GetContent(r, ".u-row li .story", "a")
 
-	web.Translate(r)
+	for _, d := range doc {
+		s := fmt.Sprintf("Tag %s, Content %s", d.Tag, d.Content)
+		fmt.Println(s)
+	}
 }
