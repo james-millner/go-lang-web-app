@@ -13,6 +13,7 @@ type Content struct {
 
 func GetResponse(url string) (*goquery.Document, error)  {
 	resp, err := http.Get(url)
+	defer resp.Body.Close()
 
 	for e, v := range resp.Header {
 		fmt.Println(e + " - " + v[0])
@@ -54,4 +55,3 @@ func translate(doc *goquery.Document, selector string, t string) []Content {
 
 	return results
 }
-
