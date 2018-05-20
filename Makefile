@@ -6,9 +6,6 @@ clean:
 	go clean
 
 build:
-	go build cmd/go-app/main.go
-
+	go build
 
 default: build
-
-.PHONY: test

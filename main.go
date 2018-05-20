@@ -1,4 +1,4 @@
-package go_learning_app
+package main
 
 import (
 	"os"
