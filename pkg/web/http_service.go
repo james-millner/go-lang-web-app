@@ -13,6 +13,11 @@ type Content struct {
 
 func GetResponse(url string) (*goquery.Document, error)  {
 	resp, err := http.Get(url)
+
+	if resp == nil {
+		return nil, err
+	}
+
 	defer resp.Body.Close()
 
 	for e, v := range resp.Header {
