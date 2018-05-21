@@ -8,9 +8,10 @@ import (
 
 func main() {
 
+	fmt.Println("Starting Scrape...")
+	fmt.Println(len(os.Args))
+
 	url := os.Args[1]
-	selector := os.Args[2]
-	tag := os.Args[3]
 
 	fmt.Println(url)
 
@@ -21,10 +22,10 @@ func main() {
 		fmt.Println(errStr)
 	}
 
-	doc := web.GetContent(r, selector, tag)
+	var links = web.GetPageLinks(r)
 
-	for _, d := range doc {
-		s := fmt.Sprintf("Tag %s, Content %s", d.Tag, d.Content)
-		fmt.Println(s)
+	for l := range links {
+		fmt.Println(links[l])
 	}
+
 }
