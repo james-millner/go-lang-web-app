@@ -5,6 +5,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"fmt"
 	"strings"
+
 )
 
 func getDocument(response *http.Response) (*goquery.Document, error) {
@@ -31,4 +32,12 @@ func getLinks(doc *goquery.Document) []string {
 	})
 
 	return links
+}
+
+func CheckLinkHasSuffix(link string, suffix string) bool {
+	if strings.HasSuffix(link, suffix) {
+		return true
+	}
+
+	return false
 }
