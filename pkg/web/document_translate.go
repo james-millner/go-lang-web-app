@@ -50,3 +50,7 @@ func contains(arr []string, str string) bool {
 	}
 	return false
 }
+
+func split(str string, sep string) []string {
+	return strings.Split(str, sep);
+}

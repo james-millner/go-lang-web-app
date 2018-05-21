@@ -64,5 +64,12 @@ func TestGetPageLinks(t *testing.T) {
 	assert.Equal(t, 126, len(links))
 }
 
+func TestSplit(t *testing.T) {
+	str := "abc,123,baby,you,and,me,girl"
+
+	array := split(str, ",")
+
+	assert.Equal(t, 7, len(array))
+}
 
 
