@@ -28,4 +28,6 @@ func main() {
 		fmt.Println(links[l])
 	}
 
+	fmt.Println(len(links))
+
 }

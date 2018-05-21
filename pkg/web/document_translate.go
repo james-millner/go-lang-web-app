@@ -26,7 +26,7 @@ func getLinks(doc *goquery.Document) []string {
 		link, _ := s.Attr("href")
 
 		//Only get links containing a protocol
-		if strings.Contains(link, "http") {
+		if strings.Contains(link, "http") && !contains(links, link) {
 			links = append(links, link)
 		}
 	})
@@ -39,5 +39,14 @@ func CheckLinkHasSuffix(link string, suffix string) bool {
 		return true
 	}
 
+	return false
+}
+
+func contains(arr []string, str string) bool {
+	for _, a := range arr {
+		if a == str {
+			return true
+		}
+	}
 	return false
 }
