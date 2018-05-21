@@ -3,5 +3,5 @@ RUN mkdir /app
 ADD . /app
 WORKDIR /app
 RUN ls -al
-RUN go build .
+RUN go build cmd/main/main.go
 CMD ["/app/main"]
