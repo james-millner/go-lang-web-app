@@ -23,3 +23,6 @@ jobs:
 
       # specify any bash command here prefixed with `run: `
       - run: make clean
+      - run: ls
+      - run: cd pkg
+      - run: ls -al
