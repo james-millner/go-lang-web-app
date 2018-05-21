@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 	"fmt"
-	"go-learning-app/pkg/web"
+	"github.com/james-millner/go-lang-web-app/pkg/web"
 )
 
 func main() {
