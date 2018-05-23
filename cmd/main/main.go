@@ -1,17 +1,19 @@
 package main
 
 import (
-		"fmt"
+	"fmt"
+	"net/http"
+	"encoding/json"
 
 	"github.com/james-millner/go-lang-web-app/pkg/web"
 	"github.com/gorilla/mux"
-		"net/http"
-	"encoding/json"
+	"strings"
 )
 
 type Response struct {
 	Success bool
-	Results []string
+	Links []string
+	Documents []string
 }
 
 func main() {
@@ -34,9 +36,19 @@ func GatherLinks(w http.ResponseWriter, r *http.Request) {
 	url := r.FormValue("url")
 
 	if url != "" {
-		links := getLinks(url)
 
-		resp := &Response{Results: links, Success: true}
+		var links []string
+		var documents []string
+
+		for _, t := range getLinks(url) {
+			if strings.Contains(t, ".pdf") {
+				documents = append(documents, t)
+			} else {
+				links = append(links, t)
+			}
+		}
+
+		resp := &Response{Links: links, Success: true, Documents: documents}
 		enc.Encode(resp)
 	} else {
 		resp := &Response{ Success: false}
