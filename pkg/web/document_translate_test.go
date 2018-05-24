@@ -50,7 +50,7 @@ func TestGetPageLinks(t *testing.T) {
 		fmt.Println(links[l])
 	}
 
-	assert.Equal(t, 126, len(links))
+	assert.Equal(t, 21, len(links))
 }
 
 
