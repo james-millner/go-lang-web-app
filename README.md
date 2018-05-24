@@ -8,5 +8,5 @@ Warning Beginner Gopher here.
 
 ## Build & Run app
 1. `go build cmd/go-app/main.go`
-2. main 'url' 'selector' 'tag'
-3. Monitor the console!
+2. App boots with a HTTP Server on port 4000.
+3. POST a request to /gather-links with the param url.
