@@ -52,6 +52,3 @@ func TestGetPageLinks(t *testing.T) {
 
 	assert.Equal(t, 4, len(links))
 }
-
-
-

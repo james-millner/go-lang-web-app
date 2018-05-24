@@ -11,8 +11,8 @@ import (
 )
 
 type Response struct {
-	Success bool
-	Links []string
+	Success   bool
+	Links     []string
 	Documents []string
 }
 
@@ -51,7 +51,7 @@ func GatherLinks(w http.ResponseWriter, r *http.Request) {
 		resp := &Response{Links: links, Success: true, Documents: documents}
 		enc.Encode(resp)
 	} else {
-		resp := &Response{ Success: false}
+		resp := &Response{Success: false}
 		enc.Encode(resp)
 	}
 }
@@ -63,7 +63,7 @@ func getLinks(url string) []string {
 	r, err := web.GetResponse(url)
 
 	if err != nil {
-		errStr := fmt.Errorf("Couldn't get a response from: " + url, err)
+		errStr := fmt.Errorf("Couldn't get a response from: "+url, err)
 		fmt.Println(errStr)
 	}
 

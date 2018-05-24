@@ -7,11 +7,11 @@ import (
 )
 
 type Content struct {
-	Tag string
+	Tag     string
 	Content string
 }
 
-func GetResponse(url string) (*goquery.Document, error)  {
+func GetResponse(url string) (*goquery.Document, error) {
 	resp, err := http.Get(url)
 
 	if resp == nil {

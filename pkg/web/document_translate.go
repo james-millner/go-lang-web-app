@@ -5,7 +5,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"fmt"
 	"strings"
-
 )
 
 func getDocument(response *http.Response) (*goquery.Document, error) {
