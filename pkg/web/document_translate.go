@@ -7,6 +7,17 @@ import (
 	"strings"
 )
 
+func getPageResponse(url string) *goquery.Document {
+	r, err := GetResponse(url)
+
+	if err != nil {
+		errStr := fmt.Errorf("Couldn't get a response from: "+url, err)
+		fmt.Println(errStr)
+	}
+
+	return r
+}
+
 func getDocument(response *http.Response) (*goquery.Document, error) {
 	document, err := goquery.NewDocumentFromReader(response.Body)
 

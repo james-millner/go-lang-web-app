@@ -33,7 +33,7 @@ func TestLinkHasSuffix(t *testing.T) {
 }
 
 func TestGetPageLinks(t *testing.T) {
-	b, err := ioutil.ReadFile("../../assets/test_data/thenextweb-homepage.html")
+	b, err := ioutil.ReadFile("../../assets/test_data/html-sample.html")
 	assert.NoError(t, err)
 
 	s := string(b[:])

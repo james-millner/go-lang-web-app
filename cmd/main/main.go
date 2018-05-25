@@ -16,19 +16,26 @@ type Response struct {
 	Documents []string
 }
 
+type IndividualLinkResponse struct {
+	Url			string
+	Selector	string
+	Tag			string
+}
+
 func main() {
 
 	port := ":4000"
 
 	router := mux.NewRouter()
-	router.HandleFunc("/gather-links", GatherLinks).Methods("POST")
+	router.HandleFunc("/gather-links", gatherLinks).Methods("POST")
+	router.HandleFunc("/handle-link", handle).Methods("POST")
 
 	fmt.Println("Listening on: ", port)
 	http.ListenAndServe(port, router)
 
 }
 
-func GatherLinks(w http.ResponseWriter, r *http.Request) {
+func gatherLinks(w http.ResponseWriter, r *http.Request) {
 
 	enc := json.NewEncoder(w)
 	enc.SetEscapeHTML(false)
@@ -47,14 +54,38 @@ func GatherLinks(w http.ResponseWriter, r *http.Request) {
 				links = append(links, t)
 			}
 		}
-
 		resp := &Response{Links: links, Success: true, Documents: documents}
+
+		for l := range links {
+			fmt.Println(links[l])
+		}
+	
+		fmt.Println("Total links found for:", len(links))
+		fmt.Println("Total documents found for:", len(documents))
+
+
 		enc.Encode(resp)
+
 	} else {
+
 		resp := &Response{Success: false}
 		enc.Encode(resp)
+
 	}
 }
+
+func handle(w http.ResponseWriter, r *http.Request) {
+	url := r.FormValue("url")
+	selector := r.FormValue("selector")
+	tag := r.FormValue("tag")
+
+	enc := json.NewEncoder(w)
+	enc.SetEscapeHTML(false)
+
+	resp := &IndividualLinkResponse{Url: url, Selector: selector, Tag: tag}
+	enc.Encode(resp)
+}
+
 
 func getLinks(url string) []string {
 
@@ -63,16 +94,12 @@ func getLinks(url string) []string {
 	r, err := web.GetResponse(url)
 
 	if err != nil {
-		errStr := fmt.Errorf("Couldn't get a response from: "+url, err)
-		fmt.Println(errStr)
+
+		error := fmt.Errorf("failed to execute request: %v", err)
+		fmt.Println(error)
+
+		return nil
 	}
 
-	var links = web.GetPageLinks(r)
-
-	for l := range links {
-		fmt.Println(links[l])
-	}
-
-	fmt.Println("Total links found for", url, ":", len(links))
-	return links
+	return web.GetPageLinks(r)
 }

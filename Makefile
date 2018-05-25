@@ -4,10 +4,11 @@ clean:
 	go clean
 
 test:
-	go get github.com/PuerkitoBio/goquery && go get github.com/stretchr/testify/assert && go get github.com/gorilla/mux
+	go get ./...
 	go test ./...
 
 build:
-	go build
+	go get github.com/PuerkitoBio/goquery && go get github.com/stretchr/testify/assert && go get github.com/gorilla/mux
+	go build cmd/main/main.go
 
 default: build
