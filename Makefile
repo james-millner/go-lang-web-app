@@ -13,6 +13,9 @@ TIMEOUT    = 15
 clean:
 	go clean
 
+test:
+	go test ./...
+
 build:
 	go build
 
