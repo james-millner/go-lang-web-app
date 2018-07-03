@@ -32,7 +32,3 @@ func getLinks(doc *goquery.Document) []string {
 
 	return links
 }
-
-func CheckLinkHasSuffix(link string, suffix string) bool {
-	return strings.HasSuffix(link, suffix)
-}

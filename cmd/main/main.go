@@ -4,39 +4,21 @@ import (
 	"fmt"
 	"net/http"
 	"encoding/json"
-
-	"github.com/james-millner/go-lang-web-app/pkg/web"
-	"github.com/gorilla/mux"
 	"strings"
-	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"database/sql"
-	"github.com/jinzhu/gorm"
 	"log"
 	"path/filepath"
 	"os"
+
+	"github.com/james-millner/go-lang-web-app/pkg/web"
+	"github.com/james-millner/go-lang-web-app/model"
+	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
 	"github.com/kelseyhightower/envconfig"
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
-
-type Response struct {
-	ID			uint
-	Url 		string 		`gorm:"size:255;"`
-	Success   	bool
-	Links     	[]Links		`gorm:"many2many:response_links;"`
-	Documents 	[]Links		`gorm:"many2many:response_documents;"`
-}
-
-type IndividualLinkResponse struct {
-	Url			string
-	Selector	string
-	Tag			string
-}
-
-type Links struct {
-	ID 		uint
-	Url 	string
-}
 
 type Service struct {
 	Storage *gorm.DB
@@ -45,7 +27,7 @@ type Service struct {
 }
 
 type Config struct {
-	Port      	int    	`default:"3306"`
+	DBPort      int    	`default:"3306"`
 	Debug     	bool   	`default:"false"`
 	DBDialect 	string 	`required:"false"`
 	Hostname	string	`default:"localhost"`
@@ -67,8 +49,6 @@ func main() {
 
 	router := mux.NewRouter()
 	service := Service{Storage: db, Router: router}
-
-	fmt.Println(db.DB().Stats().OpenConnections)
 
 	port := ":4000"
 
@@ -97,18 +77,18 @@ func (s *Service) gatherLinks(w http.ResponseWriter, r *http.Request) {
 
 	if url != "" {
 
-		var links []Links
-		var documents []Links
+		var links []model.Links
+		var documents []model.Links
 
 		for _, t := range getLinks(url) {
 			if strings.Contains(t, ".pdf") {
-				documents = append(documents, Links{Url: t})
+				documents = append(documents, model.Links{Url: t})
 			} else {
-				links = append(links, Links{Url: t})
+				links = append(links, model.Links{Url: t})
 			}
 		}
 
-		resp := &Response{Links: links, Success: true, Documents: documents, Url: url}
+		resp := &model.Response{Links: links, Success: true, Documents: documents, Url: url}
 
 		for l := range links {
 			fmt.Println(links[l])
@@ -122,7 +102,7 @@ func (s *Service) gatherLinks(w http.ResponseWriter, r *http.Request) {
 		s.Storage.Save(&resp)
 
 	} else {
-		resp := &Response{Success: false}
+		resp := &model.Response{Success: false}
 		enc.Encode(resp)
 	}
 }
@@ -135,7 +115,7 @@ func (s *Service) handleLinks(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	enc.SetEscapeHTML(false)
 
-	resp := &IndividualLinkResponse{Url: url, Selector: selector, Tag: tag}
+	resp := &model.IndividualLinkResponse{Url: url, Selector: selector, Tag: tag}
 	enc.Encode(resp)
 }
 
@@ -181,8 +161,8 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 	}
 
 	gormDB.AutoMigrate(
-		&Response{},
-		&Links{},
+		&model.Response{},
+		&model.Links{},
 	)
 
 	return gormDB, nil
