@@ -1,35 +1,43 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
-	"net/http"
-			"database/sql"
 	"log"
-	"path/filepath"
+	"net/http"
 	"os"
+	"path/filepath"
+	"strconv"
 
-	"github.com/james-millner/go-lang-web-app/pkg/model"
-	"github.com/james-millner/go-lang-web-app/pkg/handlers"
-	"github.com/gorilla/mux"
-	"github.com/jinzhu/gorm"
-	"github.com/kelseyhightower/envconfig"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
+	"github.com/james-millner/go-lang-web-app/pkg/db"
+	"github.com/james-millner/go-lang-web-app/pkg/handlers"
+	"github.com/james-millner/go-lang-web-app/pkg/model"
+	"github.com/james-millner/go-lang-web-app/pkg/service"
+	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/kelseyhightower/envconfig"
+	goji "goji.io"
+	"goji.io/pat"
 )
 
+//Service struct for holding core service related dependencies/
 type Service struct {
 	Storage *gorm.DB
-	Router 	*mux.Router
+	Router  *mux.Router
 	debug   bool
 }
 
+//Config struct for holding environment variables.
 type Config struct {
-	DBPort      int    	`default:"3306"`
-	Debug     	bool   	`default:"false"`
-	DBDialect 	string 	`required:"false"`
-	Hostname	string	`default:"localhost"`
-	DBDsn    	string
+	HTTPPort  int    `default:"8811"`
+	DBPort    int    `default:"3306"`
+	Debug     bool   `default:"false"`
+	DBDialect string `required:"false"`
+	Hostname  string `default:"localhost"`
+	DBDsn     string
 }
 
 func main() {
@@ -40,29 +48,36 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	db, err := openDBConnection(&env)
+	gormDB, err := openDBConnection(&env)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	router := mux.NewRouter()
-	service := Service{Storage: db, Router: router}
+	database := db.New(gormDB)
 
-	port := ":4000"
+	tw := service.New(database)
 
-	service.setRouters()
+	fmt.Println("Listening on: ", env.HTTPPort)
 
-	fmt.Println("Listening on: ", port)
-	http.ListenAndServe(port, router)
+	srv := &http.Server{
+		Addr:    ":" + strconv.Itoa(env.HTTPPort),
+		Handler: handlersMethod(tw),
+	}
+
+	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+		log.Printf("%v", err)
+	} else {
+		log.Printf("HTTP Server shutdown!")
+	}
 }
 
-func (a *Service) setRouters() {
-	a.Post("/gather-links", handlers.GatherLinks(a.Storage))
-}
+func handlersMethod(rs *service.ResponseService) *goji.Mux {
+	router := goji.NewMux()
 
-//handler method
-func (a *Service) Post(path string, f func(w http.ResponseWriter, r *http.Request)) {
-	a.Router.HandleFunc(path, f).Methods("POST")
+	user := handlers.NewUser(rs)
+	router.HandleFunc(pat.Post("/gather-links"), user.GatherLinks())
+
+	return router
 }
 
 func openDBConnection(config *Config) (*gorm.DB, error) {

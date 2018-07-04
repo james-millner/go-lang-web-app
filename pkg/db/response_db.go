@@ -28,12 +28,12 @@ func (d *DB) NewRecord(u *model.Response) bool {
 	return d.db.NewRecord(u)
 }
 
-func (d *DB) FindBySourceURL(sourceUrl string) *model.Response {
+func (d *DB) FindBySourceURL(sourceUrl string) []*model.Response {
 	var r model.Response
 	r.SourceURL = sourceUrl
 	d.db.Where(&r).First(&r)
 
-	return &r
+	return nil
 }
 
 func (d *DB) FindAll() []*model.Response {

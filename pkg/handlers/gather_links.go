@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/james-millner/go-lang-web-app/pkg/model"
+	"github.com/james-millner/go-lang-web-app/pkg/service"
 	"github.com/james-millner/go-lang-web-app/pkg/web"
 	"github.com/jinzhu/gorm"
 )
@@ -18,7 +20,19 @@ type Service struct {
 	debug   bool
 }
 
-func GatherLinks(db *gorm.DB) func(w http.ResponseWriter, r *http.Request) {
+// User is used to provide http handlers for retrieving Twitter User profiles and tweets
+type ResponseTest struct {
+	rs *service.ResponseService
+}
+
+// NewUser creates a new Account struct that provides http handlers for Twitter Profile and Tweets
+func NewUser(rs *service.ResponseService) *ResponseTest {
+	return &ResponseTest{
+		rs: rs,
+	}
+}
+
+func (a *ResponseTest) GatherLinks() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		enc := json.NewEncoder(w)
 		enc.SetEscapeHTML(false)
@@ -33,8 +47,12 @@ func GatherLinks(db *gorm.DB) func(w http.ResponseWriter, r *http.Request) {
 			for _, t := range getLinks(url) {
 				if strings.Contains(t, ".pdf") {
 					documents = append(documents, t)
+					a.rs.DB.Save(&model.Response{SourceURL: url, URLFound: t, CreatedAt: time.Now(), Success: true, DocumentType: 0})
+
 				} else {
 					links = append(links, t)
+					a.rs.DB.Save(&model.Response{SourceURL: url, URLFound: t, CreatedAt: time.Now(), Success: true, DocumentType: 1})
+
 				}
 			}
 

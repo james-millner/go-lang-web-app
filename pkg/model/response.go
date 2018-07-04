@@ -4,12 +4,12 @@ import "time"
 
 //Response Object
 type Response struct {
-	ID        uint   		`gorm:"primary_key"`
-	SourceURL string 		`gorm:"size:255;"`
-	Success   bool
-	URLFound  string
-	CreatedAt time.Time
-	ProcessedDate time.Time
+	ID           uint   `gorm:"primary_key"`
+	SourceURL    string `gorm:"size:255;"`
+	Success      bool
+	URLFound     string
+	DocumentType int
+	CreatedAt    time.Time
 }
 
 //ResponseDTO Object for returing to the user.
