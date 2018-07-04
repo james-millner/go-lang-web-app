@@ -1,33 +1,33 @@
 package model
 
+import "time"
+
+//Response Object
 type Response struct {
-	ID			uint
-	SourceURL 	string 		`gorm:"size:255;"`
-	Success   	bool
-	URLFound    string		`gorm:"many2many:response_links;"`
+	ID        uint   		`gorm:"primary_key"`
+	SourceURL string 		`gorm:"size:255;"`
+	Success   bool
+	URLFound  string
+	CreatedAt time.Time
+	ProcessedDate time.Time
 }
 
-type IndividualLinkResponse struct {
-	Url			string
-	Selector	string
-	Tag			string
+//ResponseDTO Object for returing to the user.
+type ResponseDTO struct {
+	SourceURL string   `json:"source"`
+	Links     []string `json:"link"`
+	Documents []string `json:"documents"`
 }
 
-type Links struct {
-	ID 		uint
-	Url 	string
+//ProcessLinkDTO Object as dummy object for now. Likely to be removed / refactored.
+type ProcessLinkDTO struct {
+	SourceURL string
+	Selector  string
 }
 
-type ResponseDTO struct{
-	SourceURL 	string 		`json:"source"`
-	Links    	[]string	`json:"link"`
-	Documents 	[]string	`json:"documents"`
-}
+// type EnumValue int
 
-
-type EnumValue int
-
-const (
-	DOCUMENT EnumValue = 0
-	HTML_LINK EnumValue = 1
-)
+// const (
+// 	DOCUMENT EnumValue = 0
+// 	HTML_LINK EnumValue = 1
+// )

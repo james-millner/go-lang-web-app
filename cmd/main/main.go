@@ -94,7 +94,6 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 
 	gormDB.AutoMigrate(
 		&model.Response{},
-		&model.Links{},
 	)
 
 	return gormDB, nil

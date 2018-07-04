@@ -1,19 +1,20 @@
 package handlers
 
 import (
-"github.com/jinzhu/gorm"
-"github.com/gorilla/mux"
-"net/http"
-"encoding/json"
-"github.com/james-millner/go-lang-web-app/pkg/model"
-"strings"
-"fmt"
-"github.com/james-millner/go-lang-web-app/pkg/web"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"strings"
+
+	"github.com/gorilla/mux"
+	"github.com/james-millner/go-lang-web-app/pkg/model"
+	"github.com/james-millner/go-lang-web-app/pkg/web"
+	"github.com/jinzhu/gorm"
 )
 
 type Service struct {
 	Storage *gorm.DB
-	Router 	*mux.Router
+	Router  *mux.Router
 	debug   bool
 }
 
