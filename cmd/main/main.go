@@ -1,35 +1,36 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
-	"net/http"
-			"database/sql"
 	"log"
-	"path/filepath"
+	"net/http"
 	"os"
+	"path/filepath"
 
-	"github.com/james-millner/go-lang-web-app/pkg/model"
-	"github.com/james-millner/go-lang-web-app/pkg/handlers"
-	"github.com/gorilla/mux"
-	"github.com/jinzhu/gorm"
-	"github.com/kelseyhightower/envconfig"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
+	"github.com/james-millner/go-lang-web-app/pkg/db"
+	"github.com/james-millner/go-lang-web-app/pkg/handlers"
+	"github.com/james-millner/go-lang-web-app/pkg/model"
+	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/kelseyhightower/envconfig"
 )
 
 type Service struct {
 	Storage *gorm.DB
-	Router 	*mux.Router
+	Router  *mux.Router
 	debug   bool
 }
 
 type Config struct {
-	DBPort      int    	`default:"3306"`
-	Debug     	bool   	`default:"false"`
-	DBDialect 	string 	`required:"false"`
-	Hostname	string	`default:"localhost"`
-	DBDsn    	string
+	DBPort    int    `default:"3306"`
+	Debug     bool   `default:"false"`
+	DBDialect string `required:"false"`
+	Hostname  string `default:"localhost"`
+	DBDsn     string
 }
 
 func main() {
@@ -40,15 +41,19 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	db, err := openDBConnection(&env)
+	gormDB, err := openDBConnection(&env)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	router := mux.NewRouter()
-	service := Service{Storage: db, Router: router}
+	service := Service{Storage: gormDB, Router: router}
 
 	port := ":4000"
+
+	database := db.New(service.Storage)
+
+	tw := handlers.New(database)
 
 	service.setRouters()
 
@@ -57,8 +62,7 @@ func main() {
 }
 
 func (a *Service) setRouters() {
-	a.Post("/gather-links", handlers.GatherLinks(a.Storage))
-	a.Post("/handle-link", handlers.HandleLinks(a.Storage))
+	a.Post("/gather-links", handlers)
 }
 
 //handler method

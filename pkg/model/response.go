@@ -4,12 +4,13 @@ import "time"
 
 //Response Object
 type Response struct {
-	ID        uint   		`gorm:"primary_key"`
-	SourceURL string 		`gorm:"size:255;"`
-	Success   bool
-	URLFound  string
-	CreatedAt time.Time
-	ProcessedDate time.Time
+	ID        		uint   		`gorm:"primary_key"`
+	SourceURL 		string 		`gorm:"size:255;"`
+	Success   		bool
+	URLFound  		string
+	CreatedAt 		time.Time
+	ProcessedDate 	time.Time
+	DocumentType 	EnumValue
 }
 
 //ResponseDTO Object for returing to the user.
@@ -25,9 +26,9 @@ type ProcessLinkDTO struct {
 	Selector  string
 }
 
-// type EnumValue int
+type EnumValue int
 
-// const (
-// 	DOCUMENT EnumValue = 0
-// 	HTML_LINK EnumValue = 1
-// )
+const (
+	DOCUMENT EnumValue = 0
+	HTML_LINK EnumValue = 1
+)

@@ -5,20 +5,14 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
-	"github.com/gorilla/mux"
 	"github.com/james-millner/go-lang-web-app/pkg/model"
 	"github.com/james-millner/go-lang-web-app/pkg/web"
-	"github.com/jinzhu/gorm"
 )
 
-type Service struct {
-	Storage *gorm.DB
-	Router  *mux.Router
-	debug   bool
-}
-
-func GatherLinks(db *gorm.DB) func(w http.ResponseWriter, r *http.Request) {
+//GatherLinks is ace.
+func (resp *Response) GatherLinks() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		enc := json.NewEncoder(w)
 		enc.SetEscapeHTML(false)
@@ -33,8 +27,16 @@ func GatherLinks(db *gorm.DB) func(w http.ResponseWriter, r *http.Request) {
 			for _, t := range getLinks(url) {
 				if strings.Contains(t, ".pdf") {
 					documents = append(documents, t)
+
+					document := &model.Response{SourceURL: url, CreatedAt: time.Now(), Success: true, DocumentType: 0, URLFound: t}
+					resp.DB.Save(document)
+					fmt.Println(document.SourceURL)
 				} else {
 					links = append(links, t)
+
+					link := &model.Response{SourceURL: url, CreatedAt: time.Now(), Success: true, DocumentType: 1, URLFound: t}
+					resp.DB.Save(link)
+					fmt.Println(link.SourceURL)
 				}
 			}
 
