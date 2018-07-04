@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 	"encoding/json"
-	"github.com/james-millner/go-lang-web-app/model"
+	"github.com/james-millner/go-lang-web-app/pkg/model"
 	"github.com/jinzhu/gorm"
 )
 

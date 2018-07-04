@@ -2,11 +2,11 @@ package web
 
 import (
 	"testing"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"strings"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestLinkHasSuffix(t *testing.T) {

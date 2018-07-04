@@ -5,7 +5,7 @@ import (
 "github.com/gorilla/mux"
 "net/http"
 "encoding/json"
-"github.com/james-millner/go-lang-web-app/model"
+"github.com/james-millner/go-lang-web-app/pkg/model"
 "strings"
 "fmt"
 "github.com/james-millner/go-lang-web-app/pkg/web"

@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"os"
 
-	"github.com/james-millner/go-lang-web-app/model"
+	"github.com/james-millner/go-lang-web-app/pkg/model"
 	"github.com/james-millner/go-lang-web-app/pkg/handlers"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
