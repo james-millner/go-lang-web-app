@@ -3,15 +3,13 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"encoding/json"
-	"strings"
-	"database/sql"
+			"database/sql"
 	"log"
 	"path/filepath"
 	"os"
 
-	"github.com/james-millner/go-lang-web-app/pkg/web"
 	"github.com/james-millner/go-lang-web-app/model"
+	"github.com/james-millner/go-lang-web-app/pkg/handlers"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	"github.com/kelseyhightower/envconfig"
@@ -59,79 +57,13 @@ func main() {
 }
 
 func (a *Service) setRouters() {
-	a.Post("/gather-links", a.gatherLinks)
-	a.Post("/handle-link", a.handleLinks)
+	a.Post("/gather-links", handlers.GatherLinks(a.Storage))
+	a.Post("/handle-link", handlers.HandleLinks(a.Storage))
 }
 
 //handler method
 func (a *Service) Post(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("POST")
-}
-
-func (s *Service) gatherLinks(w http.ResponseWriter, r *http.Request) {
-
-	enc := json.NewEncoder(w)
-	enc.SetEscapeHTML(false)
-
-	url := r.FormValue("url")
-
-	if url != "" {
-
-		var links []model.Links
-		var documents []model.Links
-
-		for _, t := range getLinks(url) {
-			if strings.Contains(t, ".pdf") {
-				documents = append(documents, model.Links{Url: t})
-			} else {
-				links = append(links, model.Links{Url: t})
-			}
-		}
-
-		resp := &model.Response{Links: links, Success: true, Documents: documents, Url: url}
-
-		for l := range links {
-			fmt.Println(links[l])
-		}
-
-		fmt.Println("Total links found for:", len(links))
-		fmt.Println("Total documents found for:", len(documents))
-
-		enc.Encode(resp)
-
-		s.Storage.Save(&resp)
-
-	} else {
-		resp := &model.Response{Success: false}
-		enc.Encode(resp)
-	}
-}
-
-func (s *Service) handleLinks(w http.ResponseWriter, r *http.Request) {
-	url := r.FormValue("url")
-	selector := r.FormValue("selector")
-	tag := r.FormValue("tag")
-
-	enc := json.NewEncoder(w)
-	enc.SetEscapeHTML(false)
-
-	resp := &model.IndividualLinkResponse{Url: url, Selector: selector, Tag: tag}
-	enc.Encode(resp)
-}
-
-func getLinks(url string) []string {
-
-	fmt.Println(url)
-
-	r, err := web.GetResponse(url)
-
-	if err != nil {
-		errFmt := fmt.Errorf("failed to execute request: %v", err)
-		fmt.Println(errFmt)
-		return nil
-	}
-
-	return web.GetPageLinks(r)
 }
 
 func openDBConnection(config *Config) (*gorm.DB, error) {
