@@ -58,7 +58,6 @@ func main() {
 
 func (a *Service) setRouters() {
 	a.Post("/gather-links", handlers.GatherLinks(a.Storage))
-	a.Post("/handle-link", handlers.HandleLinks(a.Storage))
 }
 
 //handler method
