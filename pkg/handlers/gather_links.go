@@ -48,11 +48,9 @@ func (a *ResponseTest) GatherLinks() func(w http.ResponseWriter, r *http.Request
 				if strings.Contains(t, ".pdf") {
 					documents = append(documents, t)
 					a.rs.DB.Save(&model.Response{SourceURL: url, URLFound: t, CreatedAt: time.Now(), Success: true, DocumentType: 0})
-
 				} else {
 					links = append(links, t)
 					a.rs.DB.Save(&model.Response{SourceURL: url, URLFound: t, CreatedAt: time.Now(), Success: true, DocumentType: 1})
-
 				}
 			}
 

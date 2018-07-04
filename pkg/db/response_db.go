@@ -25,7 +25,10 @@ func New(db *gorm.DB) *DB {
 }
 
 func (d *DB) NewRecord(u *model.Response) bool {
-	return d.db.NewRecord(u)
+	var c model.Response
+	d.db.Where("source_url = ? AND url_found >= ?", u.SourceURL, u.URLFound).First(&c)
+
+	return c.ID == 0
 }
 
 func (d *DB) FindBySourceURL(sourceUrl string) []*model.Response {
@@ -44,7 +47,7 @@ func (d *DB) FindAll() []*model.Response {
 }
 
 func (d *DB) Save(r *model.Response) *model.Response {
-	if d.db.NewRecord(r) {
+	if d.NewRecord(r) {
 		d.db.Create(&r)
 	} else {
 		d.db.Save(&r)
