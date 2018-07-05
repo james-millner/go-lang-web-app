@@ -62,20 +62,20 @@ func (a *ResponseTest) GatherLinks() func(w http.ResponseWriter, r *http.Request
 		var documents []string
 
 		for _, result := range results {
-			if web.IsPDFDocument(result) {
+			if web.IsPDFDocument(result)  {
 				documents = append(documents, result)
 			} else {
 				links = append(links, result)
 			}
 		}
-
 		resp := &model.ResponseDTO{Links: links, Documents: documents, SourceURL: url}
 
-		fmt.Println("Total links found for:", len(links))
+		fmt.Println("Total links found: ", len(results))
+		fmt.Println("Total case study links found for:", len(links))
 		fmt.Println("Total documents found for:", len(documents))
 
-		for l := range results {
-			fmt.Println(links[l])
+		for _, d := range documents {
+			fmt.Println(d)
 		}
 
 		enc.Encode(resp)
