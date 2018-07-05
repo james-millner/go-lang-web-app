@@ -1,9 +1,9 @@
 package web
 
 import (
-	"net/http"
-	"github.com/PuerkitoBio/goquery"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
+	"net/http"
 	"strings"
 )
 
@@ -18,14 +18,14 @@ func getDocument(response *http.Response) (*goquery.Document, error) {
 	return document, nil
 }
 
-func GetLinks(doc *goquery.Document) []string {
+func RetreiveLinksFromDocument(doc *goquery.Document) []string {
 	var links []string
 
 	doc.Find("a").Each(func(i int, s *goquery.Selection) {
 		link, _ := s.Attr("href")
 
 		//Only get links containing a protocol
-		if strings.Contains(link, "http") && !contains(links, link) {
+		if strings.Contains(link, "http") && !ArrayContains(links, link) {
 			links = append(links, link)
 		}
 	})
@@ -33,33 +33,23 @@ func GetLinks(doc *goquery.Document) []string {
 	return links
 }
 
-func isValidCaseStudyLink(url string, expectingDocument bool) bool {
+//IsPossibleCaseStudyLink function to determine if a given link mentions, or might be a case studies page.
+func IsPossibleCaseStudyLink(url string) bool {
+
 	caseStudyLink := false
-
-	if expectingDocument {
-
-		//Only want PDF links.
-		if strings.Contains(url, ".pdf") {
-			return true
-		} 
-
-		return caseStudyLink
-
-	} 
-
-	if !strings.Contains(url, "http") {
-		return caseStudyLink
-	}
 
 	casestudylinks := []string{"case-studies", "customers"}
 
 	for _, i := range casestudylinks {
-		if(strings.Contains(url, i)) {
+		if strings.Contains(url, i) {
 			caseStudyLink = true
 		}
 	}
 
-
 	return caseStudyLink
-	
+}
+
+//IsPDFDocument function to find PDF links. This may be expanded on over time, hence the introduction of its own function.
+func IsPDFDocument(url string) bool {
+	return strings.Contains(url, ".pdf")
 }

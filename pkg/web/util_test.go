@@ -20,6 +20,6 @@ func TestContains(t *testing.T) {
 		"https://thenextweb.com/section/insights.pdf",
 		"www.google.co.uk"}
 
-	assert.Equal(t, true, contains(strArray, "www.google.co.uk"))
-	assert.Equal(t, false, contains(strArray, "www.hiphop.co.uk"))
+	assert.Equal(t, true, ArrayContains(strArray, "www.google.co.uk"))
+	assert.Equal(t, false, ArrayContains(strArray, "www.hiphop.co.uk"))
 }

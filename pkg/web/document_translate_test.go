@@ -45,7 +45,7 @@ func TestGetPageLinks(t *testing.T) {
 		assert.Fail(t, "Couldn't read document.")
 	}
 
-	links := GetLinks(doc)
+	links := RetreiveLinksFromDocument(doc)
 
 	for l := range links {
 		fmt.Println(links[l])
@@ -54,10 +54,15 @@ func TestGetPageLinks(t *testing.T) {
 	assert.Equal(t, 4, len(links))
 }
 
-func TestIsValidCaseStudyURL(t *testing.T) {
-	assert.Equal(t, false, isValidCaseStudyLink("https://www.iqblade.com", false))
-	assert.Equal(t, true, isValidCaseStudyLink("https://www.iqblade.com/case-studies", false))
-	assert.Equal(t, true, isValidCaseStudyLink("https://www.iqblade.com/customers", false))
-	assert.Equal(t, true, isValidCaseStudyLink("https://www.iqblade.com/customers", false))
-	assert.Equal(t, true, isValidCaseStudyLink("https://uk.cdw.com/files/9115/0832/7959/CDW_-_Cloud_Spence_Case_Study.pdf", true))
+func TestIsPossibleCaseStudyURL(t *testing.T) {
+	assert.Equal(t, false, IsPossibleCaseStudyLink("https://www.iqblade.com"))
+	assert.Equal(t, true, IsPossibleCaseStudyLink("https://www.iqblade.com/case-studies"))
+	assert.Equal(t, true, IsPossibleCaseStudyLink("https://www.iqblade.com/customers"))
+	assert.Equal(t, true, IsPossibleCaseStudyLink("https://www.iqblade.com/customers"))
+	assert.Equal(t, true, IsPossibleCaseStudyLink("https://uk.cdw.com/files/9115/0832/7959/CDW_-_Cloud_Spence_Case_Study.pdf"))
+}
+
+func TestIsPDFDocument(t *testing.T) {
+	assert.Equal(t, false, IsPossibleCaseStudyLink("https://www.iqblade.com"))
+	assert.Equal(t, true, IsPDFDocument("https://uk.cdw.com/files/9115/0832/7959/CDW_-_Cloud_Spence_Case_Study.pdf"))
 }

@@ -2,7 +2,7 @@ package web
 
 import "strings"
 
-func contains(arr []string, str string) bool {
+func ArrayContains(arr []string, str string) bool {
 	for _, a := range arr {
 		if a == str {
 			return true

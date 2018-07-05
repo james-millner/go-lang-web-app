@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/james-millner/go-lang-web-app/pkg/model"
@@ -38,45 +37,48 @@ func (a *ResponseTest) GatherLinks() func(w http.ResponseWriter, r *http.Request
 
 		url := r.FormValue("url")
 
-		if url != "" {
-
-			var links []string
-			var documents []string
-
-			for _, t := range getLinks(url) {
-				// if strings.Contains(t, ".pdf") {
-				// 	documents = append(documents, t)
-
-				// 	document := a.rs.DB.FindBySourceURLAndURLFound(url, t)
-				// 	document.DocumentType = 0
-				// 	document.Success = true
-				// 	a.rs.DB.Save(document)
-
-				// } else {
-				// 	links = append(links, t)
-
-				// 	document := a.rs.DB.FindBySourceURLAndURLFound(url, t)
-				// 	document.Success = true
-				// 	document.DocumentType = 1
-				// 	a.rs.DB.Save(document)
-				// }
-			}
-
-			resp := &model.ResponseDTO{Links: links, Documents: documents, SourceURL: url}
-
-			for l := range links {
-				fmt.Println(links[l])
-			}
-
-			fmt.Println("Total links found for:", len(links))
-			fmt.Println("Total documents found for:", len(documents))
-
-			enc.Encode(resp)
-
-		} else {
+		if url == "" {
 			resp := &model.Response{Success: false}
 			enc.Encode(resp)
 		}
+
+		var results []string
+
+		for _, firstLevel := range getLinks(url) {
+			//Iterate over all the immediet links
+
+			if !web.ArrayContains(results, firstLevel) {
+				results = append(results, firstLevel)
+			}
+
+			for _, secondLevel := range getLinks(firstLevel) {
+				if !web.ArrayContains(results, secondLevel) {
+					results = append(results, secondLevel)
+				}
+			}
+		}
+
+		var links []string
+		var documents []string
+
+		for _, result := range results {
+			if web.IsPDFDocument(result) {
+				documents = append(documents, result)
+			} else {
+				links = append(links, result)
+			}
+		}
+
+		resp := &model.ResponseDTO{Links: links, Documents: documents, SourceURL: url}
+
+		fmt.Println("Total links found for:", len(links))
+		fmt.Println("Total documents found for:", len(documents))
+
+		for l := range results {
+			fmt.Println(links[l])
+		}
+
+		enc.Encode(resp)
 	}
 }
 
@@ -92,5 +94,5 @@ func getLinks(url string) []string {
 		return nil
 	}
 
-	return web.GetLinks(r)
+	return web.RetreiveLinksFromDocument(r)
 }
