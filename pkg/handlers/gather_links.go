@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/james-millner/go-lang-web-app/pkg/model"
@@ -45,13 +44,22 @@ func (a *ResponseTest) GatherLinks() func(w http.ResponseWriter, r *http.Request
 			var documents []string
 
 			for _, t := range getLinks(url) {
-				if strings.Contains(t, ".pdf") {
-					documents = append(documents, t)
-					a.rs.DB.Save(&model.Response{SourceURL: url, URLFound: t, CreatedAt: time.Now(), Success: true, DocumentType: 0})
-				} else {
-					links = append(links, t)
-					a.rs.DB.Save(&model.Response{SourceURL: url, URLFound: t, CreatedAt: time.Now(), Success: true, DocumentType: 1})
-				}
+				// if strings.Contains(t, ".pdf") {
+				// 	documents = append(documents, t)
+
+				// 	document := a.rs.DB.FindBySourceURLAndURLFound(url, t)
+				// 	document.DocumentType = 0
+				// 	document.Success = true
+				// 	a.rs.DB.Save(document)
+
+				// } else {
+				// 	links = append(links, t)
+
+				// 	document := a.rs.DB.FindBySourceURLAndURLFound(url, t)
+				// 	document.Success = true
+				// 	document.DocumentType = 1
+				// 	a.rs.DB.Save(document)
+				// }
 			}
 
 			resp := &model.ResponseDTO{Links: links, Documents: documents, SourceURL: url}
@@ -84,5 +92,5 @@ func getLinks(url string) []string {
 		return nil
 	}
 
-	return web.GetPageLinks(r)
+	return web.GetLinks(r)
 }

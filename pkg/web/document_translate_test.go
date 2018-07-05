@@ -1,11 +1,12 @@
 package web
 
 import (
-	"testing"
-	"io/ioutil"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
+	"io/ioutil"
 	"strings"
+	"testing"
+
+	"github.com/PuerkitoBio/goquery"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -44,11 +45,19 @@ func TestGetPageLinks(t *testing.T) {
 		assert.Fail(t, "Couldn't read document.")
 	}
 
-	links := GetPageLinks(doc)
+	links := GetLinks(doc)
 
 	for l := range links {
 		fmt.Println(links[l])
 	}
 
 	assert.Equal(t, 4, len(links))
+}
+
+func TestIsValidCaseStudyURL(t *testing.T) {
+	assert.Equal(t, false, isValidCaseStudyLink("https://www.iqblade.com", false))
+	assert.Equal(t, true, isValidCaseStudyLink("https://www.iqblade.com/case-studies", false))
+	assert.Equal(t, true, isValidCaseStudyLink("https://www.iqblade.com/customers", false))
+	assert.Equal(t, true, isValidCaseStudyLink("https://www.iqblade.com/customers", false))
+	assert.Equal(t, true, isValidCaseStudyLink("https://uk.cdw.com/files/9115/0832/7959/CDW_-_Cloud_Spence_Case_Study.pdf", true))
 }

@@ -7,7 +7,7 @@ import (
 
 // User provides access to Users via various methods
 type Response interface {
-	NewRecord(r *model.Response) bool
+	FindBySourceURLAndURLFound(source string, url string) *model.Response
 	FindBySourceURL(sourceUrl string) []*model.Response
 	FindAll() []*model.Response
 	Save(r *model.Response) *model.Response
@@ -24,11 +24,13 @@ func New(db *gorm.DB) *DB {
 	}
 }
 
-func (d *DB) NewRecord(u *model.Response) bool {
+func (d *DB) FindBySourceURLAndURLFound(sourceurl string, urlfound string) *model.Response {
 	var c model.Response
-	d.db.Where("source_url = ? AND url_found >= ?", u.SourceURL, u.URLFound).First(&c)
+	c.URLFound = urlfound
+	c.SourceURL = sourceurl
+	d.db.Where(&c).First(&c)
 
-	return c.ID == 0
+	return &c
 }
 
 func (d *DB) FindBySourceURL(sourceUrl string) []*model.Response {
@@ -47,7 +49,7 @@ func (d *DB) FindAll() []*model.Response {
 }
 
 func (d *DB) Save(r *model.Response) *model.Response {
-	if d.NewRecord(r) {
+	if d.db.NewRecord(r) {
 		d.db.Create(&r)
 	} else {
 		d.db.Save(&r)

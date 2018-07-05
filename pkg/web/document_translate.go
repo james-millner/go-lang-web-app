@@ -18,7 +18,7 @@ func getDocument(response *http.Response) (*goquery.Document, error) {
 	return document, nil
 }
 
-func getLinks(doc *goquery.Document) []string {
+func GetLinks(doc *goquery.Document) []string {
 	var links []string
 
 	doc.Find("a").Each(func(i int, s *goquery.Selection) {
@@ -31,4 +31,35 @@ func getLinks(doc *goquery.Document) []string {
 	})
 
 	return links
+}
+
+func isValidCaseStudyLink(url string, expectingDocument bool) bool {
+	caseStudyLink := false
+
+	if expectingDocument {
+
+		//Only want PDF links.
+		if strings.Contains(url, ".pdf") {
+			return true
+		} 
+
+		return caseStudyLink
+
+	} 
+
+	if !strings.Contains(url, "http") {
+		return caseStudyLink
+	}
+
+	casestudylinks := []string{"case-studies", "customers"}
+
+	for _, i := range casestudylinks {
+		if(strings.Contains(url, i)) {
+			caseStudyLink = true
+		}
+	}
+
+
+	return caseStudyLink
+	
 }
