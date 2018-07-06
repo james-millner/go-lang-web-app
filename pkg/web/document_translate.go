@@ -53,3 +53,16 @@ func IsPossibleCaseStudyLink(url string) bool {
 func IsPDFDocument(url string) bool {
 	return strings.HasSuffix(url, ".pdf")
 }
+
+func IsProbableLink(url string) bool {
+
+	notInterestedIn := []string{"twitter", "https://t.co/", "youtube.com", "facebook.com", "linkedin.com", "mailto:", "terms-and-conditions", "T&C", "terms", "conditions", "privacy", "policy", "careers", "data-transfers", "pbs.twimg.com", "plus.google.com"}
+
+	for _, p := range notInterestedIn {
+		if strings.Contains(url, p) {
+			return false
+		}
+	}
+
+	return true;
+}

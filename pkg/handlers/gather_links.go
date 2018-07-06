@@ -44,29 +44,43 @@ func (a *ResponseTest) GatherLinks() func(w http.ResponseWriter, r *http.Request
 
 		var results []string
 
-		for _, firstLevel := range getLinks(url) {
-			//Iterate over all the immediet links
+		fmt.Println("Starting to gather all first and secondary links.")
 
-			if !web.ArrayContains(results, firstLevel) {
+		for _, firstLevel := range getLinks(url) {
+			//Iterate over all the initial links from a given URL.
+			if !web.ArrayContains(results, firstLevel) && web.IsProbableLink(firstLevel) {
 				results = append(results, firstLevel)
 			}
 
 			for _, secondLevel := range getLinks(firstLevel) {
-				if !web.ArrayContains(results, secondLevel) {
+				if !web.ArrayContains(results, secondLevel) && web.IsProbableLink(secondLevel) {
 					results = append(results, secondLevel)
 				}
 			}
 		}
 
+		fmt.Println("Finished Looping.")
+
 		var links []string
 		var documents []string
 
+		fmt.Println("Results found: ", len(results))
+
 		for _, result := range results {
-			if web.IsPDFDocument(result)  {
+
+			isDoc := web.IsPDFDocument(result)
+
+			if isDoc {
 				documents = append(documents, result)
 			} else {
 				links = append(links, result)
 			}
+
+			document := a.rs.DB.FindBySourceURLAndURLFound(url, result)
+			document.Success = true
+			document.Document = isDoc
+			a.rs.DB.Save(document)
+
 		}
 		resp := &model.ResponseDTO{Links: links, Documents: documents, SourceURL: url}
 
@@ -74,17 +88,11 @@ func (a *ResponseTest) GatherLinks() func(w http.ResponseWriter, r *http.Request
 		fmt.Println("Total case study links found for:", len(links))
 		fmt.Println("Total documents found for:", len(documents))
 
-		for _, d := range documents {
-			fmt.Println(d)
-		}
-
 		enc.Encode(resp)
 	}
 }
 
 func getLinks(url string) []string {
-
-	fmt.Println(url)
 
 	r, err := web.GetResponse(url)
 

@@ -4,13 +4,13 @@ import "time"
 
 //Response Object
 type Response struct {
-	ID           uint   `gorm:"primary_key"`
-	SourceURL    string `gorm:"size:255;index:idx_name_response"`
-	Success      bool
-	URLFound     string `gorm:"index:idx_name_response"`
-	DocumentType int
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	ID        uint   `gorm:"primary_key"`
+	SourceURL string `gorm:"size:255;index:idx_name_response"`
+	Success   bool
+	URLFound  string `gorm:"index:idx_name_response"`
+	Document  bool
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 //ResponseDTO Object for returing to the user.
