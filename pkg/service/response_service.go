@@ -5,7 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// Twitter is used for communicating with Twitters APIs
+// ResponseService used for communicating with the DB
 type ResponseService struct {
 	DB db.Response
 }
@@ -15,7 +15,7 @@ type DB struct {
 	db *gorm.DB
 }
 
-// New creates a new Twitter struct for communicating with Twitter APIs
+// New creates a new ResponseService struct for communicating with the core response service.
 func New(db db.Response) *ResponseService {
 
 	t := &ResponseService{

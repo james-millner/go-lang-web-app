@@ -5,7 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// User provides access to Users via various methods
+// Response interface for getting responses from MySQL.
 type Response interface {
 	FindBySourceURLAndURLFound(source string, url string) *model.Response
 	FindBySourceURL(sourceUrl string) []*model.Response
@@ -24,6 +24,7 @@ func New(db *gorm.DB) *DB {
 	}
 }
 
+//FindBySourceURLAndURLFound method
 func (d *DB) FindBySourceURLAndURLFound(sourceurl string, urlfound string) *model.Response {
 	var c model.Response
 	c.URLFound = urlfound
@@ -33,6 +34,7 @@ func (d *DB) FindBySourceURLAndURLFound(sourceurl string, urlfound string) *mode
 	return &c
 }
 
+//FindBySourceURL method
 func (d *DB) FindBySourceURL(sourceUrl string) []*model.Response {
 	var r model.Response
 	r.SourceURL = sourceUrl
@@ -41,6 +43,7 @@ func (d *DB) FindBySourceURL(sourceUrl string) []*model.Response {
 	return nil
 }
 
+//FindAll method
 func (d *DB) FindAll() []*model.Response {
 	var responses []*model.Response
 	d.db.Find(&responses)
@@ -48,6 +51,7 @@ func (d *DB) FindAll() []*model.Response {
 	return responses
 }
 
+//Save method
 func (d *DB) Save(r *model.Response) *model.Response {
 	if d.db.NewRecord(r) {
 		d.db.Create(&r)

@@ -12,6 +12,11 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+type GatherInterface interface {
+	GatherLinks(url string) []string
+	ProcessLinks(url string, results []string) []string
+}
+
 type Service struct {
 	Storage *gorm.DB
 	Router  *mux.Router
@@ -23,13 +28,7 @@ type ResponseTest struct {
 	rs *service.ResponseService
 }
 
-// NewUser creates a new Account struct that provides http handlers for Twitter Profile and Tweets
-func NewUser(rs *service.ResponseService) *ResponseTest {
-	return &ResponseTest{
-		rs: rs,
-	}
-}
-
+//GatherLinks function used to process links for a given URL.
 func (a *ResponseTest) GatherLinks() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		enc := json.NewEncoder(w)
@@ -42,22 +41,11 @@ func (a *ResponseTest) GatherLinks() func(w http.ResponseWriter, r *http.Request
 			enc.Encode(resp)
 		}
 
-		var results []string
-
 		fmt.Println("Starting to gather all first and secondary links.")
 
-		for _, firstLevel := range getLinks(url) {
-			//Iterate over all the initial links from a given URL.
-			if !web.ArrayContains(results, firstLevel) && web.IsProbableLink(firstLevel) {
-				results = append(results, firstLevel)
-			}
+		var array []string
 
-			for _, secondLevel := range getLinks(firstLevel) {
-				if !web.ArrayContains(results, secondLevel) && web.IsProbableLink(secondLevel) {
-					results = append(results, secondLevel)
-				}
-			}
-		}
+		results := a.ProcessLinks(url, array)
 
 		fmt.Println("Finished Looping.")
 
@@ -88,19 +76,35 @@ func (a *ResponseTest) GatherLinks() func(w http.ResponseWriter, r *http.Request
 		fmt.Println("Total case study links found for:", len(links))
 		fmt.Println("Total documents found for:", len(documents))
 
+		for _, a := range links {
+			fmt.Println(a)
+		}
+
+		fmt.Println("----------")
+
+		for _, a := range documents {
+			fmt.Println(a)
+		}
+
 		enc.Encode(resp)
 	}
 }
 
-func getLinks(url string) []string {
-
-	r, err := web.GetResponse(url)
-
-	if err != nil {
-		errFmt := fmt.Errorf("failed to execute request: %v", err)
-		fmt.Println(errFmt)
-		return nil
+//ProcessLinks
+func (r *ResponseTest) ProcessLinks(url string, results []string) []string {
+	for _, u := range web.GetLinks(url) {
+		if !web.ArrayContains(results, u) && web.IsProbableLink(u) {
+			results = append(results, u)
+		}
 	}
 
-	return web.RetreiveLinksFromDocument(r)
+	for _, u := range results {
+		for _, s := range web.GetLinks(u) {
+			if !web.ArrayContains(results, s) && web.IsProbableLink(s) {
+				results = append(results, s)
+			}
+		}
+	}
+
+	return results
 }

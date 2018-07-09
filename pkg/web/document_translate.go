@@ -2,9 +2,10 @@ package web
 
 import (
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
 	"net/http"
 	"strings"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 func getDocument(response *http.Response) (*goquery.Document, error) {
@@ -18,6 +19,7 @@ func getDocument(response *http.Response) (*goquery.Document, error) {
 	return document, nil
 }
 
+//RetreiveLinksFromDocument method
 func RetreiveLinksFromDocument(doc *goquery.Document) []string {
 	var links []string
 
@@ -54,6 +56,7 @@ func IsPDFDocument(url string) bool {
 	return strings.HasSuffix(url, ".pdf")
 }
 
+//IsProbableLink method
 func IsProbableLink(url string) bool {
 
 	notInterestedIn := []string{"twitter", "https://t.co/", "youtube.com", "facebook.com", "linkedin.com", "mailto:", "terms-and-conditions", "T&C", "terms", "conditions", "privacy", "policy", "careers", "data-transfers", "pbs.twimg.com", "plus.google.com"}
@@ -64,5 +67,18 @@ func IsProbableLink(url string) bool {
 		}
 	}
 
-	return true;
+	return true
+}
+
+//GetLinks Method
+func GetLinks(url string) []string {
+
+	r, err := GetResponse(url)
+
+	if err != nil {
+		errFmt := fmt.Errorf("failed to execute request: %v", err)
+		fmt.Println(errFmt)
+		return nil
+	}
+	return RetreiveLinksFromDocument(r)
 }

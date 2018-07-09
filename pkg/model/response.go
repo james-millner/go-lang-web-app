@@ -13,7 +13,7 @@ type Response struct {
 	UpdatedAt time.Time
 }
 
-//ResponseDTO Object for returing to the user.
+//ResponseDTO Object for returing to the user / client.
 type ResponseDTO struct {
 	SourceURL string   `json:"source"`
 	Links     []string `json:"link"`
