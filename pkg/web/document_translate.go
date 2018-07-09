@@ -12,7 +12,8 @@ func getDocument(response *http.Response) (*goquery.Document, error) {
 	document, err := goquery.NewDocumentFromReader(response.Body)
 
 	if err != nil {
-		fmt.Errorf("couldn't read document: %v", err)
+		e := fmt.Errorf("couldn't read document: %v", err)
+		fmt.Println(e)
 		return nil, err
 	}
 

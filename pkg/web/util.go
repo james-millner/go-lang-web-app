@@ -2,6 +2,7 @@ package web
 
 import "strings"
 
+//ArrayContains method for determining if a String exists within a string array.
 func ArrayContains(arr []string, str string) bool {
 	for _, a := range arr {
 		if a == str {
