@@ -55,13 +55,13 @@ func main() {
 
 	database := db.New(gormDB)
 
-	tw := service.New(database)
+	rs := service.New(database)
 
 	fmt.Println("Listening on: ", env.HTTPPort)
 
 	srv := &http.Server{
 		Addr:    ":" + strconv.Itoa(env.HTTPPort),
-		Handler: handlersMethod(tw),
+		Handler: handlersMethod(rs),
 	}
 
 	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
@@ -74,7 +74,7 @@ func main() {
 func handlersMethod(rs *service.ResponseService) *goji.Mux {
 	router := goji.NewMux()
 
-	user := handlers.NewUser(rs)
+	user := handlers.NewResponseService(rs)
 	router.HandleFunc(pat.Post("/gather-links"), user.GatherLinks())
 
 	return router

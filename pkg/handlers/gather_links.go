@@ -12,6 +12,7 @@ import (
 
 //GatherInterface going to be used for testing.
 type GatherInterface interface {
+	GetLinks(url string) []string
 	GatherLinks(url string) []string
 	ProcessLinks(url string, results []string) []string
 }
@@ -23,10 +24,9 @@ type ResponseService struct {
 }
 
 //NewResponseService constructor
-func NewResponseService(rs *service.ResponseService, gi GatherInterface) *ResponseService {
+func NewResponseService(rs *service.ResponseService) *ResponseService {
 	return &ResponseService{
 		rs: rs,
-		gi: gi,
 	}
 }
 
