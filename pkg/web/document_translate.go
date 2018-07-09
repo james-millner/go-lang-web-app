@@ -27,7 +27,7 @@ func IsPossibleCaseStudyLink(url string) bool {
 
 	caseStudyLink := false
 
-	casestudylinks := []string{"case-studies", "customers"}
+	casestudylinks := []string{"case-studies", "customers", "Case_Study"}
 
 	for _, i := range casestudylinks {
 		if strings.Contains(url, i) {
