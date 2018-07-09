@@ -94,7 +94,7 @@ func (rs *ResponseService) GatherLinks() func(w http.ResponseWriter, r *http.Req
 	}
 }
 
-//ProcessLinks
+//ProcessLinks method
 func (rs *ResponseService) ProcessLinks(url string, results []string) []string {
 	for _, u := range rs.GetLinks(url) {
 		if !web.ArrayContains(results, u) && web.IsProbableLink(u) {

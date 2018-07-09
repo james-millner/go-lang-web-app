@@ -4,4 +4,4 @@ services:
     image: logicalspark/docker-tikaserver
     container_name: iqblade-casestudy-tika
     ports:
-      - "9998:9998"
+      - "9995:9995"
