@@ -1,24 +1,10 @@
 package web
 
 import (
-	"fmt"
-	"net/http"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 )
-
-func getDocument(response *http.Response) (*goquery.Document, error) {
-	document, err := goquery.NewDocumentFromReader(response.Body)
-
-	if err != nil {
-		e := fmt.Errorf("couldn't read document: %v", err)
-		fmt.Println(e)
-		return nil, err
-	}
-
-	return document, nil
-}
 
 //RetreiveLinksFromDocument method
 func RetreiveLinksFromDocument(doc *goquery.Document) []string {
@@ -69,17 +55,4 @@ func IsProbableLink(url string) bool {
 	}
 
 	return true
-}
-
-//GetLinks Method
-func GetLinks(url string) []string {
-
-	r, err := GetResponse(url)
-
-	if err != nil {
-		errFmt := fmt.Errorf("failed to execute request: %v", err)
-		fmt.Println(errFmt)
-		return nil
-	}
-	return RetreiveLinksFromDocument(r)
 }

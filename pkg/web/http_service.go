@@ -7,11 +7,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type Content struct {
-	Tag     string
-	Content string
-}
-
 //GetResponse method for retuning a GoQuery document for analysis.
 func GetResponse(url string) (*goquery.Document, error) {
 	resp, err := http.Get(url)
@@ -28,5 +23,13 @@ func GetResponse(url string) (*goquery.Document, error) {
 		return nil, err
 	}
 
-	return getDocument(resp)
+	document, err := goquery.NewDocumentFromReader(resp.Body)
+
+	if err != nil {
+		e := fmt.Errorf("couldn't read document: %v", err)
+		fmt.Println(e)
+		return nil, err
+	}
+
+	return document, nil
 }
