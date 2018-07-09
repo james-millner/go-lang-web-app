@@ -25,4 +25,4 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: make clean
       - run: make test
-      - run: docker build .
+      # - run: docker build .
