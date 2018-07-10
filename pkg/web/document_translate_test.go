@@ -12,9 +12,9 @@ import (
 
 func TestLinkHasSuffix(t *testing.T) {
 	strArray := []string{
-		"https://thenextweb.com/contributors/2018/05/18/15-online-trends-to-watch-for-in-2018-and-beyond/",
-		"https://thenextweb.com/section/insights/",
-		"https://thenextweb.com/section/insights.pdf",
+		"https://thenextcom/contributors/2018/05/18/15-online-trends-to-watch-for-in-2018-and-beyond/",
+		"https://thenextcom/section/insights/",
+		"https://thenextcom/section/insights.pdf",
 		"www.google.co.uk"}
 
 	assert.Equal(t, true, strings.HasSuffix(strArray[0], "/"))
@@ -34,7 +34,7 @@ func TestLinkHasSuffix(t *testing.T) {
 }
 
 func TestGetPageLinks(t *testing.T) {
-	b, err := ioutil.ReadFile("../../assets/test_data/thenextweb-homepage.html")
+	b, err := ioutil.ReadFile("../../assets/test_data/dummy-web.html")
 	assert.NoError(t, err)
 
 	s := string(b[:])
@@ -67,12 +67,12 @@ func TestIsPDFDocument(t *testing.T) {
 	assert.Equal(t, true, IsPDFDocument("https://uk.cdw.com/files/9115/0832/7959/CDW_-_Cloud_Spence_Case_Study.pdf"))
 	assert.Equal(t, false, IsPDFDocument("https://uk.cdw.com/files/9115/0832/7959/CDW_-_Cloud_Spence_Case_Study"))
 	assert.Equal(t, true, IsPDFDocument("https://uk.cdw.com/files/9115/.pdf/7959/CDW_-_Cloud_Spence_Case_Study"))
-	assert.Equal(t, true, IsPDFDocument("https://media.cobweb.com/site-library/docs/default-source/case-studies-azure/leadent-solutions.pdf?sfvrsn=da1f30ab_6"))
+	assert.Equal(t, true, IsPDFDocument("https://media.cobcom/site-library/docs/default-source/case-studies-azure/leadent-solutions.pdf?sfvrsn=da1f30ab_6"))
 }
 
 func TestIsProbableLink(t *testing.T) {
 	assert.Equal(t, true, IsProbableLink("https://www.iqblade.com"))
 	assert.Equal(t, false, IsProbableLink("https://www.twitter.com/iqblade"))
 	assert.Equal(t, false, IsProbableLink("https://www.linkedin.com/iqblade"))
-	assert.Equal(t, true, IsProbableLink("https://media.cobweb.com/site-library/docs/default-source/case-studies-azure/leadent-solutions.pdf?sfvrsn=da1f30ab_6"))
+	assert.Equal(t, true, IsProbableLink("https://media.cobcom/site-library/docs/default-source/case-studies-azure/leadent-solutions.pdf?sfvrsn=da1f30ab_6"))
 }
