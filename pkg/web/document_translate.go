@@ -43,7 +43,7 @@ func IsPossibleCaseStudyLink(url string) bool {
 
 //IsPDFDocument function to find PDF links. This may be expanded on over time, hence the introduction of its own function.
 func IsPDFDocument(url string) bool {
-	return strings.HasSuffix(url, ".pdf")
+	return strings.Contains(url, ".pdf")
 }
 
 //IsProbableLink method
