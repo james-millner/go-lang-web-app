@@ -90,17 +90,26 @@ func (rs *ResponseService) GatherLinks() func(w http.ResponseWriter, r *http.Req
 			fmt.Println(a)
 		}
 
+		fmt.Println("Finished processing: " + url)
+
 		enc.Encode(resp)
 	}
 }
 
 //ProcessLinks method
 func (rs *ResponseService) ProcessLinks(url string, results []string) []string {
+
+	var processed []string
+
+	//First Iteration of the given URL.
 	for _, u := range rs.GetLinks(url) {
 		if !web.ArrayContains(results, u) && web.IsProbableLink(u) {
 			results = append(results, u)
 		}
 	}
+
+	fmt.Println("First iteration complete.")
+	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
 
 	for _, u := range results {
 		for _, s := range rs.GetLinks(u) {
@@ -108,7 +117,25 @@ func (rs *ResponseService) ProcessLinks(url string, results []string) []string {
 				results = append(results, s)
 			}
 		}
+		processed = append(processed, u)
 	}
+
+	fmt.Println("Second iteration complete.")
+	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
+
+	for _, u := range results {
+		if !web.ArrayContains(processed, u) {
+			for _, s := range rs.GetLinks(u) {
+				if !web.ArrayContains(results, s) && web.IsProbableLink(s) {
+					results = append(results, s)
+				}
+			}
+			processed = append(processed, u)
+		}
+	}
+
+	fmt.Println("Third iteration complete.")
+	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
 
 	return results
 }

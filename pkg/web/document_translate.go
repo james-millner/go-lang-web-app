@@ -11,11 +11,13 @@ func RetreiveLinksFromDocument(doc *goquery.Document) []string {
 	var links []string
 
 	doc.Find("a").Each(func(i int, s *goquery.Selection) {
-		link, _ := s.Attr("href")
+		link, exists := s.Attr("href")
 
-		//Only get links containing a protocol
-		if strings.Contains(link, "http") && !ArrayContains(links, link) {
-			links = append(links, link)
+		if exists {
+			//Only get links containing a protocol
+			if strings.Contains(link, "http") && !ArrayContains(links, link) {
+				links = append(links, link)
+			}
 		}
 	})
 
@@ -27,11 +29,12 @@ func IsPossibleCaseStudyLink(url string) bool {
 
 	caseStudyLink := false
 
-	casestudylinks := []string{"case-studies", "customers", "Case_Study"}
+	casestudylinks := []string{"case-studies", "customers", "case_study", "stories", "case-study"}
 
 	for _, i := range casestudylinks {
-		if strings.Contains(url, i) {
+		if strings.Contains(strings.ToLower(url), i) {
 			caseStudyLink = true
+			break
 		}
 	}
 
@@ -49,7 +52,7 @@ func IsProbableLink(url string) bool {
 	notInterestedIn := []string{"twitter", "https://t.co/", "youtube.com", "facebook.com", "linkedin.com", "mailto:", "terms-and-conditions", "T&C", "terms", "conditions", "privacy", "policy", "careers", "data-transfers", "pbs.twimg.com", "plus.google.com"}
 
 	for _, p := range notInterestedIn {
-		if strings.Contains(url, p) {
+		if strings.Contains(strings.ToLower(url), p) {
 			return false
 		}
 	}
