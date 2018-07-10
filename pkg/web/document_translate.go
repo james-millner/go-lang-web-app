@@ -49,7 +49,7 @@ func IsPDFDocument(url string) bool {
 //IsProbableLink method
 func IsProbableLink(url string) bool {
 
-	notInterestedIn := []string{"twitter", "https://t.co/", "youtube.com", "facebook.com", "linkedin.com", "mailto:", "terms-and-conditions", "T&C", "terms", "conditions", "privacy", "policy", "careers", "data-transfers", "pbs.twimg.com", "plus.google.com", "solutions", "why", "login", "blog", "about-us"}
+	notInterestedIn := []string{"twitter", "https://t.co/", "youtube.com", "facebook.com", "linkedin.com", "mailto:", "terms-and-conditions", "T&C", "terms", "conditions", "privacy", "policy", "careers", "data-transfers", "pbs.twimg.com", "plus.google.com", "why", "login", "blog", "about-us"}
 
 	for _, p := range notInterestedIn {
 		if strings.Contains(strings.ToLower(url), p) {

@@ -67,11 +67,12 @@ func TestIsPDFDocument(t *testing.T) {
 	assert.Equal(t, true, IsPDFDocument("https://uk.cdw.com/files/9115/0832/7959/CDW_-_Cloud_Spence_Case_Study.pdf"))
 	assert.Equal(t, false, IsPDFDocument("https://uk.cdw.com/files/9115/0832/7959/CDW_-_Cloud_Spence_Case_Study"))
 	assert.Equal(t, true, IsPDFDocument("https://uk.cdw.com/files/9115/.pdf/7959/CDW_-_Cloud_Spence_Case_Study"))
+	assert.Equal(t, true, IsPDFDocument("https://media.cobweb.com/site-library/docs/default-source/case-studies-azure/leadent-solutions.pdf?sfvrsn=da1f30ab_6"))
 }
 
 func TestIsProbableLink(t *testing.T) {
 	assert.Equal(t, true, IsProbableLink("https://www.iqblade.com"))
 	assert.Equal(t, false, IsProbableLink("https://www.twitter.com/iqblade"))
 	assert.Equal(t, false, IsProbableLink("https://www.linkedin.com/iqblade"))
-
+	assert.Equal(t, true, IsProbableLink("https://media.cobweb.com/site-library/docs/default-source/case-studies-azure/leadent-solutions.pdf?sfvrsn=da1f30ab_6"))
 }

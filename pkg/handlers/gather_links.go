@@ -101,8 +101,10 @@ func (rs *ResponseService) ProcessLinks(url string, results []string) []string {
 
 	var processed []string
 
+	initialLinks, _ := rs.GetLinks(url)
+
 	//First Iteration of the given URL.
-	for _, u := range rs.GetLinks(url) {
+	for _, u := range initialLinks {
 		if !web.ArrayContains(results, u) && web.IsProbableLink(u) {
 			results = append(results, u)
 		}
@@ -112,7 +114,8 @@ func (rs *ResponseService) ProcessLinks(url string, results []string) []string {
 	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
 
 	for _, u := range results {
-		for _, s := range rs.GetLinks(u) {
+		secondaryLinks, _ := rs.GetLinks(u)
+		for _, s := range secondaryLinks {
 			if !web.ArrayContains(results, s) && web.IsProbableLink(s) {
 				results = append(results, s)
 			}
@@ -124,8 +127,9 @@ func (rs *ResponseService) ProcessLinks(url string, results []string) []string {
 	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
 
 	for _, u := range results {
+		thirdLinks, _ := rs.GetLinks(u)
 		if !web.ArrayContains(processed, u) {
-			for _, s := range rs.GetLinks(u) {
+			for _, s := range thirdLinks {
 				if !web.ArrayContains(results, s) && web.IsProbableLink(s) {
 					results = append(results, s)
 				}
@@ -141,14 +145,25 @@ func (rs *ResponseService) ProcessLinks(url string, results []string) []string {
 }
 
 //GetLinks Method
-func (rs *ResponseService) GetLinks(url string) []string {
+func (rs *ResponseService) GetLinks(url string) ([]string, error) {
 
-	d, err := web.GetResponse(url)
+	resp, err := http.Get(url)
+
+	if err != nil {
+		e := fmt.Errorf("failed to execute request: %v", err)
+		fmt.Println(e)
+		return []string{}, err
+	}
+
+	defer resp.Body.Close()
 
 	if err != nil {
 		errFmt := fmt.Errorf("failed to execute request: %v", err)
 		fmt.Println(errFmt)
-		return nil
+		return []string{}, errFmt
 	}
-	return web.RetreiveLinksFromDocument(d)
+
+	doc, err := web.GetGoqueryDocument(resp.Body)
+
+	return web.RetreiveLinksFromDocument(doc), err
 }
