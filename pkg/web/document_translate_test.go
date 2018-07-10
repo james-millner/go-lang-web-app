@@ -66,7 +66,7 @@ func TestIsPDFDocument(t *testing.T) {
 	assert.Equal(t, false, IsPDFDocument("https://www.iqblade.com"))
 	assert.Equal(t, true, IsPDFDocument("https://uk.cdw.com/files/9115/0832/7959/CDW_-_Cloud_Spence_Case_Study.pdf"))
 	assert.Equal(t, false, IsPDFDocument("https://uk.cdw.com/files/9115/0832/7959/CDW_-_Cloud_Spence_Case_Study"))
-	assert.Equal(t, false, IsPDFDocument("https://uk.cdw.com/files/9115/.pdf/7959/CDW_-_Cloud_Spence_Case_Study"))
+	assert.Equal(t, true, IsPDFDocument("https://uk.cdw.com/files/9115/.pdf/7959/CDW_-_Cloud_Spence_Case_Study"))
 }
 
 func TestIsProbableLink(t *testing.T) {
