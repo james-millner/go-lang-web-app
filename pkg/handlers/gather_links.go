@@ -10,17 +10,9 @@ import (
 	"github.com/james-millner/go-lang-web-app/pkg/web"
 )
 
-//GatherInterface going to be used for testing.
-type GatherInterface interface {
-	GetLinks(url string) []string
-	GatherLinks(url string) []string
-	ProcessLinks(url string, results []string) []string
-}
-
 // ResponseService to be used to handle communication to the DB and Service Methods.
 type ResponseService struct {
 	rs *service.ResponseService
-	gi GatherInterface
 }
 
 //NewResponseService constructor
