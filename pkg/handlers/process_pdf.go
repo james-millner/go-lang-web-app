@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-//GatherLinks function used to process links for a given URL.
+//HandleLink function.
 func (rs *ResponseService) HandleLink() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -19,12 +19,11 @@ func (rs *ResponseService) HandleLink() func(w http.ResponseWriter, r *http.Requ
 		enc.SetEscapeHTML(false)
 
 		url := r.FormValue("url")
-
 		log.Println(url)
 
-		file := DownloadFile(url)
+		fileName, _ := DownloadFile(url)
 
-		f, err := os.Open(file)
+		f, err := os.Open(fileName)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -37,12 +36,14 @@ func (rs *ResponseService) HandleLink() func(w http.ResponseWriter, r *http.Requ
 			log.Fatal(e)
 		}
 
+		os.Remove(fileName)
 		log.Println(body)
 
 	}
 }
 
-func DownloadFile(url string) string {
+//DownloadFile function
+func DownloadFile(url string) (string, error) {
 
 	tokens := strings.Split(url, "/")
 	fileName := tokens[len(tokens)-1]
@@ -52,17 +53,18 @@ func DownloadFile(url string) string {
 	if oserr != nil {
 		e := fmt.Errorf("Error with creating OS file: %v", oserr)
 		log.Fatal(e)
-		return ""
+		return "", oserr
 	}
 
 	resp, err := http.Get(url)
 	if err != nil {
 		e := fmt.Errorf("Error with GET request: %v", err)
 		log.Fatal(e)
+		return "", oserr
 	}
 	defer resp.Body.Close()
 
 	io.Copy(out, resp.Body)
 
-	return fileName
+	return fileName, nil
 }
