@@ -1,13 +1,15 @@
 package service
 
 import (
+	"github.com/google/go-tika/tika"
 	"github.com/james-millner/go-lang-web-app/pkg/db"
 	"github.com/jinzhu/gorm"
 )
 
 // ResponseService used for communicating with the DB
 type ResponseService struct {
-	DB db.Response
+	DB         db.Response
+	TikaClient *tika.Client
 }
 
 // DB struct provides access to various helper methods for querying data from the Twitter services database
@@ -16,10 +18,11 @@ type DB struct {
 }
 
 // New creates a new ResponseService struct for communicating with the core response service.
-func New(db db.Response) *ResponseService {
+func New(db db.Response, tc *tika.Client) *ResponseService {
 
 	t := &ResponseService{
-		DB: db,
+		DB:         db,
+		TikaClient: tc,
 	}
 
 	return t
