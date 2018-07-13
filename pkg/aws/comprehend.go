@@ -10,14 +10,14 @@ import (
 //RunComprehend
 func RunComprehend(body []string) *comprehend.BatchDetectEntitiesOutput {
 
-	config := &aws.Config{
+	config := aws.Config{
 		Region: "eu-west-1",
 	}
 
 	fmt.Println("Config made")
 
 	// Create a Comprehend client from just a session.
-	svc := comprehend.New(*config)
+	svc := comprehend.New(config)
 
 	fmt.Println("Created client.")
 
