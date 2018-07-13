@@ -1,15 +1,14 @@
 package aws
 
 import (
-	"fmt"
-
 	"github.com/aws/aws-sdk-go-v2/aws/endpoints"
 	"github.com/aws/aws-sdk-go-v2/aws/external"
 	"github.com/aws/aws-sdk-go-v2/service/comprehend"
+	"github.com/aws/aws-sdk-go-v2/service/comprehend/comprehendiface"
 )
 
-//RunComprehend
-func RunComprehend(body []string) *comprehend.BatchDetectEntitiesOutput {
+//RunComprehend method
+func RunComprehend(body []string) (*comprehend.BatchDetectEntitiesOutput, error) {
 
 	cfg, err := external.LoadDefaultAWSConfig()
 	if err != nil {
@@ -17,30 +16,20 @@ func RunComprehend(body []string) *comprehend.BatchDetectEntitiesOutput {
 	}
 	cfg.Region = endpoints.EuWest1RegionID
 
-	fmt.Println("Config made")
-
 	// Create a Comprehend client from just a session.
 	svc := comprehend.New(cfg)
 
-	fmt.Println("Created client.")
+	request := DetectEntities(svc, body)
 
-	lang := "en"
+	return request.Send()
+}
 
-	input := &comprehend.BatchDetectEntitiesInput{LanguageCode: &lang, TextList: body}
+//DetectEntities method
+func DetectEntities(svc comprehendiface.ComprehendAPI, text []string) comprehend.BatchDetectEntitiesRequest {
+	lang := "eu"
 
-	fmt.Println(input.GoString())
+	input := &comprehend.BatchDetectEntitiesInput{LanguageCode: &lang, TextList: text}
 
 	request := svc.BatchDetectEntitiesRequest(input)
-
-	fmt.Println("Request created.")
-
-	resp, err := request.Send()
-
-	if err == nil {
-		fmt.Println(resp)
-		return resp
-	}
-
-	fmt.Println("Error ")
-	return nil
+	return request
 }

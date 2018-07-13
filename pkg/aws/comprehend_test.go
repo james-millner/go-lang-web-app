@@ -4,34 +4,37 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/aws/aws-sdk-go-v2/service/comprehend"
+	"github.com/aws/aws-sdk-go-v2/service/comprehend/comprehendiface"
 	"github.com/stretchr/testify/assert"
 )
 
+// Define a mock struct to be used in your unit tests of myFunc.
+type mockComprehendClient struct {
+	comprehendiface.ComprehendAPI
+}
+
+func (m *mockComprehendClient) BatchDetectEntitiesRequest(input *comprehend.BatchDetectEntitiesInput) comprehend.BatchDetectEntitiesRequest {
+	lang := "en"
+
+	input.TextList = []string{"IQBlade"}
+	input.LanguageCode = &lang
+
+	obj := &comprehend.BatchDetectEntitiesRequest{Input: input}
+
+	return *obj
+}
+
 func TestComprehend(t *testing.T) {
 
-	testSet := []string{"Two former distribution executives have revealed ambitious growth plans for IQBlade, a market intelligence platform that aims to use machine-learning techniques to help vendors select partners.", "Young said the concept of IQBlade was born three years ago when he and Abraham were working with vendors through their consulting business, Demuto.", "IQBlade currently has 6,000 fully fleshed-out UK profiles. Although the firm currently focuses on the UK, Young said the platform's capabilities can be replicated in France and the Nordics."}
+	mockSvc := &mockComprehendClient{}
 
-	results := RunComprehend(testSet)
+	str := []string{}
 
-	if results != nil {
-		entities := results.ResultList
+	res := DetectEntities(mockSvc, str)
 
-		for _, i := range entities {
-			fmt.Println(i.GoString())
+	fmt.Println(res)
 
-			for _, o := range i.Entities {
-				fmt.Println(o.Text)
-				str, err := o.Type.MarshalValue()
-
-				if err == nil {
-					fmt.Println(str)
-				}
-
-			}
-		}
-	} else {
-		fmt.Println("Errorerererer!")
-	}
-
-	assert.Equal(t, true, true)
+	assert.NotNil(t, res)
+	assert.Len(t, res.Input.TextList, 1)
 }
