@@ -12,13 +12,13 @@ import (
 
 // ResponseService to be used to handle communication to the DB and Service Methods.
 type ResponseService struct {
-	rs *service.ResponseService
+	rs *service.DBService
 }
 
 //NewResponseService constructor
-func NewResponseService(rs *service.ResponseService) *ResponseService {
+func NewResponseService(dbs *service.DBService) *ResponseService {
 	return &ResponseService{
-		rs: rs,
+		rs: dbs,
 	}
 }
 
@@ -39,7 +39,7 @@ func (rs *ResponseService) GatherLinks() func(w http.ResponseWriter, r *http.Req
 
 		var array []string
 
-		results := rs.ProcessLinks(url, array)
+		results := rs.HandleGatheredLinks(url, array)
 
 		fmt.Println("Finished Looping.")
 
@@ -88,8 +88,8 @@ func (rs *ResponseService) GatherLinks() func(w http.ResponseWriter, r *http.Req
 	}
 }
 
-//ProcessLinks method
-func (rs *ResponseService) ProcessLinks(url string, results []string) []string {
+//HandleGatheredLinks method
+func (rs *ResponseService) HandleGatheredLinks(url string, results []string) []string {
 
 	var processed []string
 

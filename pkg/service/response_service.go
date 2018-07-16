@@ -7,7 +7,7 @@ import (
 )
 
 // ResponseService used for communicating with the DB
-type ResponseService struct {
+type DBService struct {
 	DB         db.Response
 	TikaClient *tika.Client
 }
@@ -18,9 +18,9 @@ type DB struct {
 }
 
 // New creates a new ResponseService struct for communicating with the core response service.
-func New(db db.Response, tc *tika.Client) *ResponseService {
+func New(db db.Response, tc *tika.Client) *DBService {
 
-	t := &ResponseService{
+	t := &DBService{
 		DB:         db,
 		TikaClient: tc,
 	}

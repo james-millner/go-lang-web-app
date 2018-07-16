@@ -112,12 +112,12 @@ func main() {
 	}
 }
 
-func handlersMethod(rs *service.ResponseService) *goji.Mux {
+func handlersMethod(rs *service.DBService) *goji.Mux {
 	router := goji.NewMux()
 
 	user := handlers.NewResponseService(rs)
 	router.HandleFunc(pat.Post("/gather-links"), user.GatherLinks())
-	router.HandleFunc(pat.Post("/handle-link"), user.HandleLink())
+	router.HandleFunc(pat.Post("/process-link"), user.ProcessLink())
 	return router
 }
 
@@ -149,6 +149,7 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 
 	gormDB.AutoMigrate(
 		&model.Response{},
+		&model.CaseStudy{},
 	)
 
 	return gormDB, nil

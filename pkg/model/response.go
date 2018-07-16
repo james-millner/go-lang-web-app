@@ -13,22 +13,13 @@ type Response struct {
 	UpdatedAt time.Time
 }
 
-//ResponseDTO Object for returing to the user / client.
-type ResponseDTO struct {
-	SourceURL string   `json:"source"`
-	Links     []string `json:"link"`
-	Documents []string `json:"documents"`
+//CaseStudy entity
+type CaseStudy struct {
+	ID            uint   `gorm:"primary_key"`
+	CompanyNumber string `gorm:"index:idx_company_number" json:"companyNumber"`
+	SourceURL     string `gorm:"index:idx_source_url" json:"sourceUrl"`
+	CaseStudyText string `gorm:"size:500" json:"caseStudyText"`
+	IdentifiedOn  time.Time
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }
-
-//ProcessLinkDTO Object as dummy object for now. Likely to be removed / refactored.
-type ProcessLinkDTO struct {
-	SourceURL string
-	Selector  string
-}
-
-// type EnumValue int
-
-// const (
-// 	DOCUMENT EnumValue = 0
-// 	HTML_LINK EnumValue = 1
-// )
