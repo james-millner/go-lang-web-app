@@ -29,9 +29,7 @@ func TestTranslate(t *testing.T) {
 
 	results := DetermineOrganisationTag(obj)
 
-	assert.Len(t, results, 3)
-	assert.Equal(t, results[0].Text, "IQBlade")
-	assert.Equal(t, results[0].Tag, "ORGANIZATION")
-	assert.Equal(t, results[1].Text, "Elder")
-	assert.Equal(t, results[1].Tag, "ORGANIZATION")
+	assert.Len(t, results, 2)
+	assert.Equal(t, results[0], "IQBlade")
+	assert.Equal(t, results[1], "Elder")
 }

@@ -78,3 +78,32 @@ func (d *DB) SaveCaseStudy(c *model.CaseStudy) *model.CaseStudy {
 
 	return c
 }
+
+func (d *DB) SaveCaseStudyOrganisation(c *model.CaseStudyOrganisations) *model.CaseStudyOrganisations {
+	if d.db.NewRecord(c) {
+		d.db.Create(&c)
+	} else {
+		d.db.Save(&c)
+	}
+
+	return c
+}
+
+func (d *DB) FindCaseStudyBySourceAndCompanyNumber(source string, companyNumber string) *model.CaseStudy {
+	var c model.CaseStudy
+	c.SourceURL = source
+	c.CompanyNumber = companyNumber
+	d.db.Where(&c).First(&c)
+
+	return &c
+
+}
+
+func (d *DB) FindCaseStudyOrganisationByNameAndCaseID(organisationName string, id uint) *model.CaseStudyOrganisations {
+	var c model.CaseStudyOrganisations
+	c.OrganisationName = organisationName
+	c.CaseStudyID = id
+	d.db.Where(&c).First(&c)
+
+	return &c
+}

@@ -118,7 +118,6 @@ func handlersMethod(rs *service.CaseStudyService, tika *tika.Client) *goji.Mux {
 	user := handlers.NewCaseStudyService(rs, tika)
 	router.HandleFunc(pat.Post("/gather-links"), user.GatherLinks())
 	router.HandleFunc(pat.Post("/process-link"), user.ProcessCaseStudyLink())
-	router.HandleFunc(pat.Post("/comprehend-casestudy"), user.ComprehendCaseStudy())
 	return router
 }
 
@@ -151,6 +150,7 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 	gormDB.AutoMigrate(
 		&model.Response{},
 		&model.CaseStudy{},
+		&model.CaseStudyOrganisations{},
 	)
 
 	return gormDB, nil

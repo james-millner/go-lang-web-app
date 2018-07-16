@@ -9,6 +9,9 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
+
+	"github.com/james-millner/go-lang-web-app/pkg/aws"
 )
 
 //ProcessCaseStudyLink function.
@@ -56,11 +59,32 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 				body := strings.TrimSpace(body)
 
-				//caseStudy := &model.CaseStudy{SourceURL: url, CompanyNumber: companyNumber, CaseStudyText: body}
+				runes := []rune(body)
+				//... Convert back into a string from rune slice.
+				safeSubstring := string(runes[0:4500])
+
+				csss := cs.dbs.DB.FindCaseStudyBySourceAndCompanyNumber(url, companyNumber)
+				csss.IdentifiedOn = time.Now()
+				csss.CaseStudyText = safeSubstring
+
+				saved := cs.dbs.DB.SaveCaseStudy(csss)
+
+				as, _ := aws.RunComprehend([]string{safeSubstring})
+
+				companies := aws.DetermineOrganisationTag(as)
+
+				log.Println(fmt.Sprintf("%v%v", len(companies), " companies found!"))
+
+				for _, o := range companies {
+					id := &saved.ID
+					test := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, *id)
+					cs.dbs.DB.SaveCaseStudyOrganisation(test)
+					log.Println("Saved..")
+				}
 
 				f.Close()
 				os.Remove(fileName)
-				log.Println(body)
+				//log.Println(body)
 			}
 		}
 	}

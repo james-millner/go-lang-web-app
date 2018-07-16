@@ -26,7 +26,7 @@ func RunComprehend(body []string) (*comprehend.BatchDetectEntitiesOutput, error)
 
 //DetectEntities method
 func DetectEntities(svc comprehendiface.ComprehendAPI, text []string) comprehend.BatchDetectEntitiesRequest {
-	lang := "eu"
+	lang := "en"
 
 	input := &comprehend.BatchDetectEntitiesInput{LanguageCode: &lang, TextList: text}
 
