@@ -11,8 +11,8 @@ import (
 	"strings"
 )
 
-//ProcessLink function.
-func (rs *ResponseService) ProcessLink() func(w http.ResponseWriter, r *http.Request) {
+//ProcessCaseStudyLink function.
+func (rs *ResponseService) ProcessCaseStudyLink() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		enc := json.NewEncoder(w)
@@ -23,22 +23,22 @@ func (rs *ResponseService) ProcessLink() func(w http.ResponseWriter, r *http.Req
 
 		tokens := strings.Split(url, "/")
 		fileName := tokens[len(tokens)-1]
-	
+
 		out, oserr := os.Create(fileName)
-	
+
 		if oserr != nil {
 			e := fmt.Errorf("Error with creating OS file: %v", oserr)
 			log.Fatal(e)
 		}
-	
+
 		resp, err := http.Get(url)
 		if err != nil {
 			e := fmt.Errorf("Error with GET request: %v", err)
 			log.Fatal(e)
 		}
-		
+
 		defer resp.Body.Close()
-	
+
 		io.Copy(out, resp.Body)
 
 		f, err := os.Open(fileName)
@@ -51,11 +51,11 @@ func (rs *ResponseService) ProcessLink() func(w http.ResponseWriter, r *http.Req
 				e := fmt.Errorf("Error with TikaClient parse: %v", err)
 				log.Fatal(e)
 			} else {
-	
+
 				body := strings.TrimSpace(body)
 
 				//bodyArray := strings.Split(body, "/n")
-	
+
 				f.Close()
 				os.Remove(fileName)
 				log.Println(body)
@@ -63,4 +63,3 @@ func (rs *ResponseService) ProcessLink() func(w http.ResponseWriter, r *http.Req
 		}
 	}
 }
-

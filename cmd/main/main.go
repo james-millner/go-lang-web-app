@@ -117,7 +117,7 @@ func handlersMethod(rs *service.DBService) *goji.Mux {
 
 	user := handlers.NewResponseService(rs)
 	router.HandleFunc(pat.Post("/gather-links"), user.GatherLinks())
-	router.HandleFunc(pat.Post("/process-link"), user.ProcessLink())
+	router.HandleFunc(pat.Post("/process-link"), user.ProcessCaseStudyLink())
 	return router
 }
 
