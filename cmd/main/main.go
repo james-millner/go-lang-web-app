@@ -16,6 +16,7 @@ import (
 	"github.com/google/go-tika/tika"
 	"github.com/gorilla/mux"
 	"github.com/james-millner/go-lang-web-app/pkg/db"
+	"github.com/james-millner/go-lang-web-app/pkg/es"
 	"github.com/james-millner/go-lang-web-app/pkg/handlers"
 	"github.com/james-millner/go-lang-web-app/pkg/model"
 	"github.com/james-millner/go-lang-web-app/pkg/service"
@@ -23,6 +24,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/olivere/elastic"
 	goji "goji.io"
 	"goji.io/pat"
 )
@@ -36,13 +38,14 @@ type Service struct {
 
 //Config struct for holding environment variables.
 type Config struct {
-	HTTPPort  int    `default:"8811"`
-	DBPort    int    `default:"3306"`
-	Debug     bool   `default:"false"`
-	DBDialect string `required:"false"`
-	Hostname  string `default:"localhost"`
-	TikaPort  string `default:"9998"`
-	DBDsn     string
+	HTTPPort   int    `default:"8811"`
+	DBPort     int    `default:"3306"`
+	Debug      bool   `default:"false"`
+	DBDialect  string `required:"false"`
+	Hostname   string `default:"localhost"`
+	ElasticURL string `default:"http://localhost:9200"`
+	TikaPort   string `default:"9998"`
+	DBDsn      string
 }
 
 func main() {
@@ -56,6 +59,11 @@ func main() {
 	gormDB, err := openDBConnection(&env)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	esc, err := createElasticClient(env.ElasticURL)
+	if err != nil {
+		log.Fatalf("failed to load elastic client: %v", err)
 	}
 
 	log.Println("Starting Tika server... ")
@@ -77,13 +85,14 @@ func main() {
 	database := db.New(gormDB)
 
 	client := tika.NewClient(nil, tikaserver.URL())
+	es := es.New(esc)
 	rs := service.New(database, client)
 
 	log.Println("Listening on: ", env.HTTPPort)
 
 	srv := &http.Server{
 		Addr:    ":" + strconv.Itoa(env.HTTPPort),
-		Handler: handlersMethod(rs, client),
+		Handler: handlersMethod(rs, client, es),
 	}
 
 	go func() {
@@ -112,10 +121,10 @@ func main() {
 	}
 }
 
-func handlersMethod(rs *service.CaseStudyService, tika *tika.Client) *goji.Mux {
+func handlersMethod(rs *service.CaseStudyService, tika *tika.Client, es *es.Elastic) *goji.Mux {
 	router := goji.NewMux()
 
-	user := handlers.NewCaseStudyService(rs, tika)
+	user := handlers.NewCaseStudyService(rs, tika, es)
 	router.HandleFunc(pat.Post("/gather-links"), user.GatherLinks())
 	router.HandleFunc(pat.Post("/process-link"), user.ProcessCaseStudyLink())
 	return router
@@ -154,4 +163,18 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 	)
 
 	return gormDB, nil
+}
+
+func createElasticClient(url string) (*elastic.Client, error) {
+
+	c, err := elastic.NewClient(
+		elastic.SetURL(url),
+		elastic.SetSniff(false),
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to create new elastic client: %v", err)
+	}
+
+	return c, nil
 }

@@ -11,7 +11,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/james-millner/go-lang-web-app/pkg/aws"
+	"github.com/james-millner/go-lang-web-app/pkg/model"
 )
 
 //ProcessCaseStudyLink function.
@@ -59,33 +61,45 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 				body := strings.TrimSpace(body)
 
+				//Substring methodoloy
 				runes := []rune(body)
-				//... Convert back into a string from rune slice.
 				safeSubstring := string(runes[0:4500])
 
+				str, _ := uuid.NewRandom()
+
 				csss := cs.dbs.DB.FindCaseStudyBySourceAndCompanyNumber(url, companyNumber)
+				csss.ID = str.String()
 				csss.IdentifiedOn = time.Now()
 				csss.CaseStudyText = safeSubstring
-
 				saved := cs.dbs.DB.SaveCaseStudy(csss)
 
 				as, _ := aws.RunComprehend([]string{safeSubstring})
 
 				companies := aws.DetermineOrganisationTag(as)
 
-				log.Println(fmt.Sprintf("%v%v", len(companies), " companies found!"))
-
 				cs.dbs.DB.DeleteCaseStudyOrganisations(saved.ID)
+
+				arr := []model.CaseStudyOrganisations{}
 
 				for _, o := range companies {
 					test := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, saved.ID)
-					cs.dbs.DB.SaveCaseStudyOrganisation(test)
-					log.Println("Saved..")
+					obj := cs.dbs.DB.SaveCaseStudyOrganisation(test)
+					arr = append(arr, *obj)
+				}
+
+				csss.Organizations = arr
+
+				ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
+
+				esErr := cs.es.PutRecord(ctx, *csss)
+
+				if esErr != nil {
+					log.Fatalf("failed to put record into elasticsearch: %v", err)
 				}
 
 				f.Close()
 				os.Remove(fileName)
-				//log.Println(body)
+				enc.Encode(csss)
 			}
 		}
 	}

@@ -60,7 +60,7 @@ func (d *DB) SaveResponse(r *model.Response) *model.Response {
 }
 
 //FindByID method
-func (d *DB) FindByID(id uint) *model.CaseStudy {
+func (d *DB) FindByID(id string) *model.CaseStudy {
 	var c model.CaseStudy
 	c.ID = id
 	d.db.Where(&c).First(&c)
@@ -99,14 +99,14 @@ func (d *DB) FindCaseStudyBySourceAndCompanyNumber(source string, companyNumber 
 
 }
 
-func (d *DB) DeleteCaseStudyOrganisations(caseStudyId uint) {
+func (d *DB) DeleteCaseStudyOrganisations(caseStudyId string) {
 	var c model.CaseStudyOrganisations
 	c.CaseStudyID = caseStudyId
 
 	d.db.Delete(&c)
 }
 
-func (d *DB) FindCaseStudyOrganisationByNameAndCaseID(organisationName string, id uint) *model.CaseStudyOrganisations {
+func (d *DB) FindCaseStudyOrganisationByNameAndCaseID(organisationName string, id string) *model.CaseStudyOrganisations {
 	var c model.CaseStudyOrganisations
 	c.OrganisationName = organisationName
 	c.CaseStudyID = id

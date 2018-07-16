@@ -1,8 +1,6 @@
 package aws
 
 import (
-	"log"
-
 	"github.com/aws/aws-sdk-go-v2/service/comprehend"
 	"github.com/james-millner/go-lang-web-app/pkg/web"
 )
@@ -21,7 +19,6 @@ func DetermineOrganisationTag(output *comprehend.BatchDetectEntitiesOutput) []st
 	returnedResults := []string{}
 
 	for _, obj := range results {
-		log.Println(obj.GoString())
 		for _, o := range obj.Entities {
 
 			tag, _ := o.Type.MarshalValue()

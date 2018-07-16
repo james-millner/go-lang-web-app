@@ -15,11 +15,11 @@ type Response struct {
 
 //CaseStudy entity
 type CaseStudy struct {
-	ID            uint                     `gorm:"primary_key"`
+	ID            string                   `gorm:"primary_key"`
 	CompanyNumber string                   `gorm:"index:idx_company_number" json:"companyNumber"`
 	SourceURL     string                   `gorm:"index:idx_source_url" json:"sourceUrl"`
-	CaseStudyText string                   `gorm:"size:5000" json:"caseStudyText"`
-	Organizations []CaseStudyOrganisations `gorm:"one2many:case_study_organisations;"`
+	CaseStudyText string                   `gorm:"size:7500" json:"caseStudyText"`
+	Organizations []CaseStudyOrganisations `gorm:"one2many:case_studies_organisations;"`
 	IdentifiedOn  time.Time
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
@@ -27,6 +27,6 @@ type CaseStudy struct {
 
 //CaseStudyOrganisations entity
 type CaseStudyOrganisations struct {
-	CaseStudyID      uint
+	CaseStudyID      string
 	OrganisationName string `gorm:"index:idx_organisation"`
 }

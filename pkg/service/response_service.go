@@ -12,7 +12,7 @@ type CaseStudyService struct {
 	TikaClient *tika.Client
 }
 
-// DB struct provides access to various helper methods for querying data from the Twitter services database
+// DB struct provides access to various helper methods for querying data from the MySQL database
 type DB struct {
 	db *gorm.DB
 }

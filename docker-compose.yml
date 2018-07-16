@@ -1,7 +1,9 @@
 version: '3'
 services:
-  tika:
-    image: logicalspark/docker-tikaserver
-    container_name: iqblade-casestudy-tika
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
     ports:
-      - "9995:9995"
+      - "9200:9200"
+      - "9300:9300"
+    environment: 
+      - discovery.type=single-node
