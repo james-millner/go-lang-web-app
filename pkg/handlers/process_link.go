@@ -75,9 +75,10 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 				log.Println(fmt.Sprintf("%v%v", len(companies), " companies found!"))
 
+				cs.dbs.DB.DeleteCaseStudyOrganisations(saved.ID)
+
 				for _, o := range companies {
-					id := &saved.ID
-					test := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, *id)
+					test := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, saved.ID)
 					cs.dbs.DB.SaveCaseStudyOrganisation(test)
 					log.Println("Saved..")
 				}

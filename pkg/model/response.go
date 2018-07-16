@@ -27,7 +27,6 @@ type CaseStudy struct {
 
 //CaseStudyOrganisations entity
 type CaseStudyOrganisations struct {
-	ID uint 
 	CaseStudyID      uint
-	OrganisationName string
+	OrganisationName string `gorm:"index:idx_organisation"`
 }

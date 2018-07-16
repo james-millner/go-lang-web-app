@@ -99,6 +99,13 @@ func (d *DB) FindCaseStudyBySourceAndCompanyNumber(source string, companyNumber 
 
 }
 
+func (d *DB) DeleteCaseStudyOrganisations(caseStudyId uint) {
+	var c model.CaseStudyOrganisations
+	c.CaseStudyID = caseStudyId
+
+	d.db.Delete(&c)
+}
+
 func (d *DB) FindCaseStudyOrganisationByNameAndCaseID(organisationName string, id uint) *model.CaseStudyOrganisations {
 	var c model.CaseStudyOrganisations
 	c.OrganisationName = organisationName
