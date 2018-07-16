@@ -83,7 +83,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:    ":" + strconv.Itoa(env.HTTPPort),
-		Handler: handlersMethod(rs),
+		Handler: handlersMethod(rs, client),
 	}
 
 	go func() {
@@ -112,12 +112,13 @@ func main() {
 	}
 }
 
-func handlersMethod(rs *service.DBService) *goji.Mux {
+func handlersMethod(rs *service.CaseStudyService, tika *tika.Client) *goji.Mux {
 	router := goji.NewMux()
 
-	user := handlers.NewResponseService(rs)
+	user := handlers.NewCaseStudyService(rs, tika)
 	router.HandleFunc(pat.Post("/gather-links"), user.GatherLinks())
 	router.HandleFunc(pat.Post("/process-link"), user.ProcessCaseStudyLink())
+	router.HandleFunc(pat.Post("/comprehend-casestudy"), user.ComprehendCaseStudy())
 	return router
 }
 

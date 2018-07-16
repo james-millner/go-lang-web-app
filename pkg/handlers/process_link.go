@@ -12,14 +12,15 @@ import (
 )
 
 //ProcessCaseStudyLink function.
-func (rs *ResponseService) ProcessCaseStudyLink() func(w http.ResponseWriter, r *http.Request) {
+func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		enc := json.NewEncoder(w)
 		enc.SetEscapeHTML(false)
 
+		companyNumber := r.FormValue("company_number")
 		url := r.FormValue("url")
-		log.Println(url)
+		log.Println(companyNumber + " - " + url)
 
 		tokens := strings.Split(url, "/")
 		fileName := tokens[len(tokens)-1]
@@ -45,7 +46,8 @@ func (rs *ResponseService) ProcessCaseStudyLink() func(w http.ResponseWriter, r 
 		if err != nil {
 			log.Fatal(err)
 		} else {
-			body, err := rs.rs.TikaClient.Parse(context.Background(), f)
+
+			body, err := cs.tika.Parse(context.Background(), f)
 
 			if err != nil {
 				e := fmt.Errorf("Error with TikaClient parse: %v", err)
@@ -54,7 +56,7 @@ func (rs *ResponseService) ProcessCaseStudyLink() func(w http.ResponseWriter, r 
 
 				body := strings.TrimSpace(body)
 
-				//bodyArray := strings.Split(body, "/n")
+				//caseStudy := &model.CaseStudy{SourceURL: url, CompanyNumber: companyNumber, CaseStudyText: body}
 
 				f.Close()
 				os.Remove(fileName)

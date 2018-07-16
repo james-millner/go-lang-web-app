@@ -8,11 +8,17 @@ import (
 // Response interface for getting responses from MySQL.
 type Response interface {
 	FindBySourceURLAndURLFound(source string, url string) *model.Response
-	FindBySourceURL(sourceUrl string) []*model.Response
 	FindAll() []*model.Response
 	Save(r *model.Response) *model.Response
 }
 
+//CaseStudy interface for handling communication with the CaseStudy entity.
+type CaseStudy interface {
+	FindByID(id uint) *model.CaseStudy
+	Save(c *model.CaseStudy) *model.CaseStudy
+}
+
+//DB Struct for communication with GORM.
 type DB struct {
 	db *gorm.DB
 }
@@ -34,15 +40,6 @@ func (d *DB) FindBySourceURLAndURLFound(sourceurl string, urlfound string) *mode
 	return &c
 }
 
-//FindBySourceURL method
-func (d *DB) FindBySourceURL(sourceUrl string) []*model.Response {
-	var r model.Response
-	r.SourceURL = sourceUrl
-	d.db.Where(&r).First(&r)
-
-	return nil
-}
-
 //FindAll method
 func (d *DB) FindAll() []*model.Response {
 	var responses []*model.Response
@@ -51,8 +48,8 @@ func (d *DB) FindAll() []*model.Response {
 	return responses
 }
 
-//Save method
-func (d *DB) Save(r *model.Response) *model.Response {
+//SaveResponse method
+func (d *DB) SaveResponse(r *model.Response) *model.Response {
 	if d.db.NewRecord(r) {
 		d.db.Create(&r)
 	} else {
@@ -60,4 +57,24 @@ func (d *DB) Save(r *model.Response) *model.Response {
 	}
 
 	return r
+}
+
+//FindByID method
+func (d *DB) FindByID(id uint) *model.CaseStudy {
+	var c model.CaseStudy
+	c.ID = id
+	d.db.Where(&c).First(&c)
+
+	return &c
+}
+
+//SaveCaseStudy method
+func (d *DB) SaveCaseStudy(c *model.CaseStudy) *model.CaseStudy {
+	if d.db.NewRecord(c) {
+		d.db.Create(&c)
+	} else {
+		d.db.Save(&c)
+	}
+
+	return c
 }

@@ -6,24 +6,11 @@ import (
 	"net/http"
 
 	"github.com/james-millner/go-lang-web-app/pkg/model"
-	"github.com/james-millner/go-lang-web-app/pkg/service"
 	"github.com/james-millner/go-lang-web-app/pkg/web"
 )
 
-// ResponseService to be used to handle communication to the DB and Service Methods.
-type ResponseService struct {
-	rs *service.DBService
-}
-
-//NewResponseService constructor
-func NewResponseService(dbs *service.DBService) *ResponseService {
-	return &ResponseService{
-		rs: dbs,
-	}
-}
-
 //GatherLinks function used to process links for a given URL.
-func (rs *ResponseService) GatherLinks() func(w http.ResponseWriter, r *http.Request) {
+func (cs *CaseStudyService) GatherLinks() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		enc := json.NewEncoder(w)
 		enc.SetEscapeHTML(false)
@@ -39,7 +26,7 @@ func (rs *ResponseService) GatherLinks() func(w http.ResponseWriter, r *http.Req
 
 		var array []string
 
-		results := rs.HandleGatheredLinks(url, array)
+		results := cs.HandleGatheredLinks(url, array)
 
 		fmt.Println("Finished Looping.")
 
@@ -58,10 +45,10 @@ func (rs *ResponseService) GatherLinks() func(w http.ResponseWriter, r *http.Req
 				links = append(links, result)
 			}
 
-			document := rs.rs.DB.FindBySourceURLAndURLFound(url, result)
+			document := cs.dbs.DB.FindBySourceURLAndURLFound(url, result)
 			document.Success = true
 			document.Document = isDoc
-			rs.rs.DB.Save(document)
+			cs.dbs.DB.SaveResponse(document)
 
 		}
 		resp := &model.ResponseDTO{Links: links, Documents: documents, SourceURL: url}
@@ -89,7 +76,7 @@ func (rs *ResponseService) GatherLinks() func(w http.ResponseWriter, r *http.Req
 }
 
 //HandleGatheredLinks method
-func (rs *ResponseService) HandleGatheredLinks(url string, results []string) []string {
+func (rs *CaseStudyService) HandleGatheredLinks(url string, results []string) []string {
 
 	var processed []string
 
@@ -137,7 +124,7 @@ func (rs *ResponseService) HandleGatheredLinks(url string, results []string) []s
 }
 
 //GetLinks Method
-func (rs *ResponseService) GetLinks(url string) ([]string, error) {
+func (rs *CaseStudyService) GetLinks(url string) ([]string, error) {
 
 	resp, err := http.Get(url)
 

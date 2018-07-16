@@ -6,9 +6,9 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// ResponseService used for communicating with the DB
-type DBService struct {
-	DB         db.Response
+// CaseStudyService used for communicating with the DB
+type CaseStudyService struct {
+	DB         *db.DB
 	TikaClient *tika.Client
 }
 
@@ -18,9 +18,9 @@ type DB struct {
 }
 
 // New creates a new ResponseService struct for communicating with the core response service.
-func New(db db.Response, tc *tika.Client) *DBService {
+func New(db *db.DB, tc *tika.Client) *CaseStudyService {
 
-	t := &DBService{
+	t := &CaseStudyService{
 		DB:         db,
 		TikaClient: tc,
 	}
