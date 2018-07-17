@@ -68,7 +68,11 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 				str, _ := uuid.NewRandom()
 
 				csss := cs.dbs.DB.FindCaseStudyBySourceAndCompanyNumber(url, companyNumber)
-				csss.ID = str.String()
+
+				if csss.ID == "" {
+					csss.ID = str.String()
+				}
+
 				csss.IdentifiedOn = time.Now()
 				csss.CaseStudyText = safeSubstring
 				saved := cs.dbs.DB.SaveCaseStudy(csss)

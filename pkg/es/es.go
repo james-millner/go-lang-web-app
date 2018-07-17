@@ -87,8 +87,6 @@ func (e *Elastic) PutRecord(ctx context.Context, study model.CaseStudy) error {
 		BodyJson(dto).
 		Do(context.Background())
 
-	log.Println("PUT!")
-
 	return nil
 }
 
