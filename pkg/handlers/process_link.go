@@ -61,41 +61,15 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 				body := strings.TrimSpace(body)
 
-				//Substring methodoloy
-				runes := []rune(body)
-				safeSubstring := string(runes[0:4500])
+				caseStudyObj := cs.saveCaseStudy(body, url, companyNumber)
 
-				str, _ := uuid.NewRandom()
+				ctx, err := context.WithTimeout(context.Background(), 1*time.Second)
 
-				csss := cs.dbs.DB.FindCaseStudyBySourceAndCompanyNumber(url, companyNumber)
-
-				if csss.ID == "" {
-					csss.ID = str.String()
+				if err != nil {
+					log.Fatalf("failed to create context with timeout: %v", err)
 				}
 
-				csss.IdentifiedOn = time.Now()
-				csss.CaseStudyText = safeSubstring
-				saved := cs.dbs.DB.SaveCaseStudy(csss)
-
-				as, _ := aws.RunComprehend([]string{safeSubstring})
-
-				companies := aws.DetermineOrganisationTag(as)
-
-				cs.dbs.DB.DeleteCaseStudyOrganisations(saved.ID)
-
-				arr := []model.CaseStudyOrganisations{}
-
-				for _, o := range companies {
-					test := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, saved.ID)
-					obj := cs.dbs.DB.SaveCaseStudyOrganisation(test)
-					arr = append(arr, *obj)
-				}
-
-				csss.Organizations = arr
-
-				ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
-
-				esErr := cs.es.PutRecord(ctx, *csss)
+				esErr := cs.es.PutRecord(ctx, *caseStudyObj)
 
 				if esErr != nil {
 					log.Fatalf("failed to put record into elasticsearch: %v", err)
@@ -103,8 +77,46 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 				f.Close()
 				os.Remove(fileName)
-				enc.Encode(csss)
+				enc.Encode(caseStudyObj)
 			}
 		}
 	}
+}
+
+func (cs *CaseStudyService) saveCaseStudy(body string, url string, companyNumber string) *model.CaseStudy {
+	b := strings.TrimSpace(body)
+
+	//Substring methodoloy
+	runes := []rune(b)
+	safeSubstring := string(runes[0:4500])
+
+	str, _ := uuid.NewRandom()
+
+	csss := cs.dbs.DB.FindCaseStudyBySourceAndCompanyNumber(url, companyNumber)
+
+	if csss.ID == "" {
+		csss.ID = str.String()
+	}
+
+	csss.IdentifiedOn = time.Now()
+	csss.CaseStudyText = safeSubstring
+	saved := cs.dbs.DB.SaveCaseStudy(csss)
+
+	as, _ := aws.RunComprehend([]string{safeSubstring})
+
+	companies := aws.DetermineOrganisationTag(as)
+
+	cs.dbs.DB.DeleteCaseStudyOrganisations(saved.ID)
+
+	arr := []model.CaseStudyOrganisations{}
+
+	for _, o := range companies {
+		test := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, saved.ID)
+		obj := cs.dbs.DB.SaveCaseStudyOrganisation(test)
+		arr = append(arr, *obj)
+	}
+
+	csss.Organizations = arr
+
+	return csss
 }
