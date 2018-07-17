@@ -84,15 +84,17 @@ func main() {
 
 	database := db.New(gormDB)
 
-	client := tika.NewClient(nil, tikaserver.URL())
+	tc := tika.NewClient(nil, tikaserver.URL())
+	
 	es := es.New(esc)
-	rs := service.New(database, client)
+
+	cs := service.New(database, tc)
 
 	log.Println("Listening on: ", env.HTTPPort)
 
 	srv := &http.Server{
 		Addr:    ":" + strconv.Itoa(env.HTTPPort),
-		Handler: handlersMethod(rs, client, es),
+		Handler: handlersMethod(cs, tc, es),
 	}
 
 	go func() {

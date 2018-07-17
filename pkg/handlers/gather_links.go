@@ -76,11 +76,11 @@ func (cs *CaseStudyService) GatherLinks() func(w http.ResponseWriter, r *http.Re
 }
 
 //HandleGatheredLinks method
-func (rs *CaseStudyService) HandleGatheredLinks(url string, results []string) []string {
+func (cs *CaseStudyService) HandleGatheredLinks(url string, results []string) []string {
 
 	var processed []string
 
-	initialLinks, _ := rs.GetLinks(url)
+	initialLinks, _ := cs.GetLinks(url)
 
 	//First Iteration of the given URL.
 	for _, u := range initialLinks {
@@ -93,7 +93,7 @@ func (rs *CaseStudyService) HandleGatheredLinks(url string, results []string) []
 	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
 
 	for _, u := range results {
-		secondaryLinks, _ := rs.GetLinks(u)
+		secondaryLinks, _ := cs.GetLinks(u)
 		for _, s := range secondaryLinks {
 			if !web.ArrayContains(results, s) && web.IsProbableLink(s) {
 				results = append(results, s)
@@ -106,7 +106,7 @@ func (rs *CaseStudyService) HandleGatheredLinks(url string, results []string) []
 	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
 
 	for _, u := range results {
-		thirdLinks, _ := rs.GetLinks(u)
+		thirdLinks, _ := cs.GetLinks(u)
 		if !web.ArrayContains(processed, u) {
 			for _, s := range thirdLinks {
 				if !web.ArrayContains(results, s) && web.IsProbableLink(s) {
