@@ -13,13 +13,19 @@ func TranslateToElastic(obj model.CaseStudy) model.CaseStudyDTO {
 	dto.IdentifiedOn = obj.IdentifiedOn
 	dto.UpdatedAt = obj.UpdatedAt
 
-	strArray := []string{}
+	companies := []string{}
+	people := []string{}
 
 	for _, o := range obj.Organizations {
-		strArray = append(strArray, o.OrganisationName)
+		companies = append(companies, o.OrganisationName)
 	}
 
-	dto.Organizations = strArray
+	for _, p := range obj.People {
+		people = append(people, p.PersonName)
+	}
+
+	dto.Organizations = companies
+	dto.People = people
 
 	return dto
 

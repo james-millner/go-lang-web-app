@@ -63,11 +63,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 				caseStudyObj := cs.saveCaseStudy(body, url, companyNumber)
 
-				ctx, err := context.WithTimeout(context.Background(), 1*time.Second)
-
-				if err != nil {
-					log.Fatalf("failed to create context with timeout: %v", err)
-				}
+				ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
 
 				esErr := cs.es.PutRecord(ctx, *caseStudyObj)
 
@@ -75,8 +71,8 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 					log.Fatalf("failed to put record into elasticsearch: %v", err)
 				}
 
-				f.Close()
-				os.Remove(fileName)
+				defer f.Close()
+				defer os.Remove(fileName)
 				enc.Encode(caseStudyObj)
 			}
 		}
@@ -85,6 +81,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 func (cs *CaseStudyService) saveCaseStudy(body string, url string, companyNumber string) *model.CaseStudy {
 	b := strings.TrimSpace(body)
+	b = strings.Replace(b, "\n", "", -1)
 
 	//Substring methodoloy
 	runes := []rune(b)
@@ -104,19 +101,27 @@ func (cs *CaseStudyService) saveCaseStudy(body string, url string, companyNumber
 
 	as, _ := aws.RunComprehend([]string{safeSubstring})
 
-	companies := aws.DetermineOrganisationTag(as)
+	companies, people := aws.DetermineOrganisationTag(as)
 
 	cs.dbs.DB.DeleteCaseStudyOrganisations(saved.ID)
 
-	arr := []model.CaseStudyOrganisations{}
+	companyArr := []model.CaseStudyOrganisations{}
+	peopleArr := []model.CaseStudyPeople{}
 
 	for _, o := range companies {
 		test := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, saved.ID)
 		obj := cs.dbs.DB.SaveCaseStudyOrganisation(test)
-		arr = append(arr, *obj)
+		companyArr = append(companyArr, *obj)
 	}
 
-	csss.Organizations = arr
+	for _, o := range people {
+		test := cs.dbs.DB.FindCaseStudyPersonByNameAndCaseID(o, saved.ID)
+		obj := cs.dbs.DB.SaveCaseStudyPerson(test)
+		peopleArr = append(peopleArr, *obj)
+	}
+
+	csss.Organizations = companyArr
+	csss.People = peopleArr
 
 	return csss
 }

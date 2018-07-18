@@ -11,11 +11,12 @@ type ResponseDTO struct {
 
 //CaseStudy entity
 type CaseStudyDTO struct {
-	ID            string  
+	ID            string
 	CompanyNumber string    `json:"companyNumber"`
 	SourceURL     string    `json:"sourceUrl"`
 	CaseStudyText string    `json:"caseStudyText"`
 	Organizations []string  `json:"organisations"`
+	People        []string  `json:"people"`
 	IdentifiedOn  time.Time `json:"identifiedOn"`
 	CreatedAt     time.Time `json:"createdAt"`
 	UpdatedAt     time.Time `json:"updatedAt"`

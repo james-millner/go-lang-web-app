@@ -85,7 +85,7 @@ func main() {
 	database := db.New(gormDB)
 
 	tc := tika.NewClient(nil, tikaserver.URL())
-	
+
 	es := es.New(esc)
 
 	cs := service.New(database, tc)
@@ -108,6 +108,12 @@ func main() {
 
 		ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
 		defer cancel()
+
+		tikaErr := tikaserver.Stop()
+
+		if tikaErr != nil {
+			log.Fatal(tikaErr)
+		}
 
 		if err := srv.Shutdown(ctx); err != nil {
 			log.Printf("Unable to shut down server: %v", err)
@@ -162,6 +168,7 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 		&model.Response{},
 		&model.CaseStudy{},
 		&model.CaseStudyOrganisations{},
+		&model.CaseStudyPeople{},
 	)
 
 	return gormDB, nil

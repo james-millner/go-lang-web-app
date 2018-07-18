@@ -19,14 +19,21 @@ type CaseStudy struct {
 	CompanyNumber string                   `gorm:"index:idx_company_number" json:"companyNumber"`
 	SourceURL     string                   `gorm:"index:idx_source_url" json:"sourceUrl"`
 	CaseStudyText string                   `gorm:"size:7500" json:"caseStudyText"`
-	Organizations []CaseStudyOrganisations `gorm:"one2many:case_studies_organisations;"`
-	IdentifiedOn  time.Time
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
+	Organizations []CaseStudyOrganisations `gorm:"one2many:case_studies_organisations;" json:"organisations"`
+	People        []CaseStudyPeople        `gorm:"one2many:case_studies_people;" json:"people"`
+	IdentifiedOn  time.Time                `json:"identifiedOn"`
+	CreatedAt     time.Time                `json:"createdAt"`
+	UpdatedAt     time.Time                `json:"updatedAt"`
 }
 
 //CaseStudyOrganisations entity
 type CaseStudyOrganisations struct {
-	CaseStudyID      string
-	OrganisationName string `gorm:"index:idx_organisation"`
+	CaseStudyID      string `json:"caseStudyId"`
+	OrganisationName string `gorm:"index:idx_organisation" json:"organisationName"`
+}
+
+//CaseStudyPeople entity
+type CaseStudyPeople struct {
+	CaseStudyID string `json:"caseStudyId"`
+	PersonName  string `gorm:"index:idx_person_name" json:"peopleName"`
 }
