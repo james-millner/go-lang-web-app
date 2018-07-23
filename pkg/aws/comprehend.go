@@ -30,6 +30,5 @@ func DetectEntities(svc comprehendiface.ComprehendAPI, text []string) comprehend
 
 	input := &comprehend.BatchDetectEntitiesInput{LanguageCode: &lang, TextList: text}
 
-	request := svc.BatchDetectEntitiesRequest(input)
-	return request
+	return svc.BatchDetectEntitiesRequest(input)
 }

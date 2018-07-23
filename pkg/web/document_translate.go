@@ -7,17 +7,27 @@ import (
 )
 
 //RetreiveLinksFromDocument method
-func RetreiveLinksFromDocument(doc *goquery.Document) []string {
+func RetreiveLinksFromDocument(url string, doc *goquery.Document) []string {
 	var links []string
 
 	doc.Find("a").Each(func(i int, s *goquery.Selection) {
 		link, exists := s.Attr("href")
 
+		//log.Printf("%s - %v", link, exists)
 		if exists {
 			//Only get links containing a protocol
 			if strings.Contains(link, "http") && !ArrayContains(links, link) {
 				links = append(links, link)
 			}
+
+			if !strings.Contains(link, "http") {
+				formattedURL := url + link
+
+				if strings.Contains(formattedURL, "http") && !ArrayContains(links, formattedURL) {
+					links = append(links, formattedURL)
+				}
+			}
+
 		}
 	})
 
@@ -29,7 +39,7 @@ func IsPossibleCaseStudyLink(url string) bool {
 
 	caseStudyLink := false
 
-	casestudylinks := []string{"case-studies", "customers", "case_study", "stories", "case-study"}
+	casestudylinks := []string{"case-studies", "customers", "case_study", "stories", "case-study", "client-stories", "client-story"}
 
 	for _, i := range casestudylinks {
 		if strings.Contains(strings.ToLower(url), i) {
@@ -49,7 +59,8 @@ func IsPDFDocument(url string) bool {
 //IsProbableLink method
 func IsProbableLink(url string) bool {
 
-	notInterestedIn := []string{"twitter", "https://t.co/", "youtube.com", "facebook.com", "linkedin.com", "mailto:", "terms-and-conditions", "T&C", "terms", "conditions", "privacy", "policy", "careers", "data-transfers", "pbs.twimg.com", "plus.google.com", "why", "login", "blog", "about-us"}
+	notInterestedIn := []string{"twitter", "https://t.co/", "youtube.com", "facebook.com", "linkedin.com", "mailto:", "terms-and-conditions", "T&C", "terms", "conditions",
+		"privacy", "policy", "careers", "data-transfers", "pbs.twimg.com", "plus.google.com", "why", "login", "blog", "about-us", "myservices", "yahoo", "renewal", "campaign", "applications", "gartner", "features"}
 
 	for _, p := range notInterestedIn {
 		if strings.Contains(strings.ToLower(url), p) {

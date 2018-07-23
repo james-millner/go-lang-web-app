@@ -1,7 +1,7 @@
 version: '3'
 services:
   es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    image: elasticsearch:2.3.5
     ports:
       - "9200:9200"
       - "9300:9300"

@@ -67,7 +67,6 @@ func main() {
 	}
 
 	log.Println("Starting Tika server... ")
-	// Optionally pass a port as the second argument.
 	tikaserver, serr := tika.NewServer("tika-server-1.14.jar", env.TikaPort)
 	if serr != nil {
 		log.Fatal(err)

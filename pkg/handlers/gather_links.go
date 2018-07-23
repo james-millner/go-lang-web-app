@@ -144,5 +144,5 @@ func (rs *CaseStudyService) GetLinks(url string) ([]string, error) {
 
 	doc, err := web.GetGoqueryDocument(resp.Body)
 
-	return web.RetreiveLinksFromDocument(doc), err
+	return web.RetreiveLinksFromDocument(url, doc), err
 }
