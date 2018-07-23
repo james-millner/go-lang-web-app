@@ -45,13 +45,13 @@ func TestGetPageLinks(t *testing.T) {
 		assert.Fail(t, "Couldn't read document.")
 	}
 
-	links := RetreiveLinksFromDocument(doc)
+	links := RetreiveLinksFromDocument("https://test.co.uk",doc)
 
 	for l := range links {
 		fmt.Println(links[l])
 	}
 
-	assert.Equal(t, 4, len(links))
+	assert.Equal(t, 5, len(links))
 }
 
 func TestIsPossibleCaseStudyURL(t *testing.T) {
