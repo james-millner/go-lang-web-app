@@ -2,7 +2,22 @@
 #
 # Check https://circleci.com/docs/2.0/language-go/ for more details
 version: 2
+
+references:
+  deploy_container_config: &deploy_container_config
+    docker:
+      - image: docker:17.05.0-ce-git
+    working_directory: /app
+
 jobs:
+  test:
+    docker:
+      - image: circleci/golang:1.10
+    working_directory: /go/src/github.com/james-millner/go-lang-web-app
+    steps:
+      - checkout
+      - run: make clean
+      - run: make test 
   build:
     docker:
       # specify the version
@@ -23,6 +38,4 @@ jobs:
       - checkout
 
       # specify any bash command here prefixed with `run: `
-      - run: make clean
-      - run: make test
       # - run: docker build .

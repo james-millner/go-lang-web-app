@@ -1,4 +1,4 @@
-PACKAGE  = go/src/codecommit/go-lang-web-app
+PACKAGE  = go-lang-web-app
 
 clean:
 	go clean
