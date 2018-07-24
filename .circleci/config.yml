@@ -33,4 +33,7 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: make clean
       - run: make test
-      # - run: docker build .
+      - run: eval $(aws ecr get-login --no-include-email --region eu-west-1)
+      - run: docker build .
+      - run: docker push 704123096655.dkr.ecr.eu-west-1.amazonaws.com/casestudies
+      - run: printf '[{"name":"casestudy","imageUri":"704123096655.dkr.ecr.eu-west-1.amazonaws.com/casestudies"}]' > imagedefinitions.json

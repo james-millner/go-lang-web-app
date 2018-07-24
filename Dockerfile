@@ -5,4 +5,4 @@ WORKDIR /go/src/github.com/james-millner/go-lang-web-app/
 RUN make test
 RUN make build
 
-CMD ["/main"]
+CMD ["/main"]pwd
