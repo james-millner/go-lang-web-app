@@ -62,7 +62,7 @@ func main() {
 
 	gormDB, err := openDBConnection(&env)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("failed to establish DB Connection: %v: ", err)
 	}
 
 	esc, err := createElasticClient(env.ElasticURL)
@@ -154,7 +154,7 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 		dbDSN := config.DBDsn
 
 		if config.DBDsn == "" {
-			dbDSN = "root@tcp(" + config.Hostname + ":3306)/iqblade-casestudy?charset=utf8&parseTime=True"
+			dbDSN = "root@tcp(" + config.Hostname + ":3306)/iqblade-casestudies?charset=utf8&parseTime=True"
 		}
 
 		db, err := sql.Open("mysql", dbDSN)
