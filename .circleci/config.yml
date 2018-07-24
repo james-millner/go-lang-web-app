@@ -41,3 +41,107 @@ jobs:
       - run: docker build -t casestudies .
       - run: docker tag casestudies:latest 704123096655.dkr.ecr.eu-west-1.amazonaws.com/casestudies:latest
       - run: docker push 704123096655.dkr.ecr.eu-west-1.amazonaws.com/casestudies:latest
+
+version: 2
+
+references:
+  deploy_container_config: &deploy_container_config
+    docker:
+      - image: docker:17.05.0-ce-git
+    working_directory: /app
+
+jobs:
+  test:
+    docker:
+      - image: circleci/golang:1.10
+    working_directory: /go/src/github.com/james-millner/go-lang-web-app
+    steps:
+      - checkout
+      - run: make clean
+      - run: make test
+      - store_test_results:
+          path: test
+      - store_artifacts:
+          path: test
+
+  build_docker_image:
+    <<: *deploy_container_config
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Do the docker build
+          command: |
+            docker build -t casestudies:latest .
+            mkdir -p docker-cache
+            docker save -o docker-cache/built-image.tar casestudies:latest
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ epoch }}
+          paths:
+            - docker-cache
+
+  push_docker_image:
+    <<: *deploy_container_config
+    steps:
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-{{ .Branch }}
+          paths:
+            - /docker-cache/built-image.tar
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache py-pip
+            pip install awscli
+      - run:
+          name: Sign into AWS ecr
+          command: |
+            aws configure set region eu-west-1
+            $(aws ecr get-login)
+      - run:
+          name: Push it to ECR
+          command: |
+            docker load < docker-cache/built-image.tar
+            docker tag casestudies:latest $AWS_ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com/casestudies:latest
+            docker push $AWS_ACCOUNT_ID.dkr.ecr.eu-west-1.amazonaws.com/casestudies:latest
+
+  deploy:
+    <<: *deploy_container_config
+    steps:
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache py-pip
+            pip install awscli
+      - run:
+          name: Configure AWS Region
+          command: |
+            aws configure set region eu-west-1
+      - run:
+          name: Run 
+          command: |
+            aws ecs update-service --cluster iqblade-live --service casestudies --force-new-deployment
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - test
+      - build_docker_image:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - push_docker_image:
+          requires:
+            - build_docker_image
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - push_docker_image
+          filters:
+            branches:
+              only: master
