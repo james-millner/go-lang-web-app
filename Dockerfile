@@ -5,7 +5,7 @@ WORKDIR /go/src/github.com/james-millner/go-lang-web-app/
 
 RUN make init && make build
 
-FROM gcr.io/distroless/base
+FROM gcr.io/distroless/java
 
 EXPOSE 8092
 
