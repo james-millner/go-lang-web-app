@@ -45,7 +45,7 @@ type Config struct {
 	DBDialect  string `required:"false"`
 	DBHost     string `required:"true" default:"localhost"`
 	DBPort     int    `required:"true" default:"3306"`
-	DBUsername string `required:"true"`
+	DBUser     string `required:"true"`
 	DBPassword string `required:"true"`
 	DBDatabase string `required:"true" default:"iqblade-casestudies"`
 	ElasticURL string `default:"http://localhost:9200"`
@@ -154,7 +154,7 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 	case "mysql":
 		dsn := fmt.Sprintf(
 			"%s:%s@tcp(%s:%d)/%s",
-			config.DBUsername,
+			config.DBUser,
 			config.DBPassword,
 			config.DBHost,
 			config.DBPort,
