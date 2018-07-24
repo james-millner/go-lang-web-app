@@ -3,7 +3,7 @@ FROM golang:1.10.0 as builder
 COPY ./ /go/src/github.com/james-millner/go-lang-web-app/
 WORKDIR /go/src/github.com/james-millner/go-lang-web-app/
 
-RUN make build
+RUN make init && make build
 
 FROM gcr.io/distroless/base
 
