@@ -41,13 +41,14 @@ type Service struct {
 //Config struct for holding environment variables.
 type Config struct {
 	HTTPPort   int    `default:"8092"`
-	DBPort     int    `default:"3306"`
 	Debug      bool   `default:"false"`
 	DBDialect  string `required:"false"`
-	DBUser     string `default:"root"`
-	DBPassword string `default:""`
-	Hostname   string `default:"localhost"`
-	ElasticURL string `default:"http://elasticsearch:9200"`
+	DBHost     string `required:"true" default:"localhost"`
+	DBPort     int    `required:"true" default:"3306"`
+	DBUsername string `required:"true"`
+	DBPassword string `required:"true"`
+	DBDatabase string `required:"true" default:"iqblade-casestudies"`
+	ElasticURL string `default:"http://localhost:9200"`
 	TikaPort   string `default:"9998"`
 	DBDsn      string
 }
@@ -151,13 +152,18 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 
 	switch config.DBDialect {
 	case "mysql":
-		dbDSN := config.DBDsn
+		dsn := fmt.Sprintf(
+			"%s:%s@tcp(%s:%d)/%s",
+			config.DBUsername,
+			config.DBPassword,
+			config.DBHost,
+			config.DBPort,
+			config.DBDatabase,
+		)
 
-		if config.DBDsn == "" {
-			dbDSN = "root@tcp(" + config.Hostname + ":3306)/iqblade-casestudies?charset=utf8&parseTime=True"
-		}
+		log.Println(dsn)
 
-		db, err := sql.Open("mysql", dbDSN)
+		db, err := sql.Open("mysql", dsn)
 		if err != nil {
 			log.Fatalf("Failed to load mysql driver: %v", err)
 		}

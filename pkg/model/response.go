@@ -5,7 +5,7 @@ import "time"
 //Response Object
 type Response struct {
 	ID        uint   `gorm:"primary_key"`
-	SourceURL string `gorm:"size:5000;index:idx_name_response"`
+	SourceURL string `gorm:"size:200;" index:"idx_name_response"`
 	Success   bool
 	URLFound  string `gorm:"index:idx_name_response"`
 	Document  bool
@@ -15,9 +15,9 @@ type Response struct {
 
 //CaseStudy entity
 type CaseStudy struct {
-	ID            string                   `gorm:"primary_key"`
-	CompanyNumber string                   `gorm:"index:idx_company_number" json:"companyNumber"`
-	SourceURL     string                   `gorm:"index:idx_source_url" json:"sourceUrl"`
+	ID            string                   `gorm:"primary_key" size:"70"`
+	CompanyNumber string                   `gorm:"index:idx_company_number" json:"companyNumber" size:"20"`
+	SourceURL     string                   `gorm:"index:idx_source_url" json:"sourceUrl" size:"200"`
 	CaseStudyText string                   `gorm:"size:7500" json:"caseStudyText"`
 	Organizations []CaseStudyOrganisations `gorm:"one2many:case_studies_organisations;" json:"organisations"`
 	People        []CaseStudyPeople        `gorm:"one2many:case_studies_people;" json:"people"`
