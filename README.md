@@ -1,6 +1,8 @@
 IQBlade - Case Study Microservice
 ----------------------------
 
+[![CircleCI](https://circleci.com/gh/james-millner/go-lang-web-app/tree/master.svg?style=svg&circle-token=b97b68792491c3010205c810362a0e99b1b81db4)](https://circleci.com/gh/james-millner/go-lang-web-app/tree/master)
+
 A simple Case Study Microservice in GoLang. The app boots up and provides an API to interact and use the service. 
 
 ##### Pre Requisites 
@@ -15,7 +17,7 @@ The application has two endpoints:
 This endpoint will go to the passed URL and scan for web content / links and return possible documents and links as JSON. It will also be stored locally in a DB for the service to log.
 
 - Process Link; `/process-link` requires a POST request with two parameters of; `url` & `company_number` 
-This endpoint will go to a found case study URL provided as a parameter and bind it to the company number parameter provided. The service will then try to extract text from the document and analyze company related text. This will then be bound to a DTO and exported into an Elasticsearch Client.
+This endpoint will go to a found case study URL provided as a p arameter and bind it to the company number parameter provided. The service will then try to extract text from the document and analyze company related text. This will then be bound to a DTO and exported into an Elasticsearch Client.
 
 Warning Beginner Gopher here.
 
