@@ -33,7 +33,7 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: make clean
       - run: make test
-      - run: apk add --no-cache py-pip
+      - run: sudo apt-get install pip
       - run: pip install awscli
       - run: aws configure set region eu-west-1
       - run: $(aws ecr get-login)
