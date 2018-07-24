@@ -1,9 +1,7 @@
 package web
 
 import (
-	"math/rand"
 	"strings"
-	"time"
 )
 
 //ArrayContains method for determining if a String exists within a string array.
