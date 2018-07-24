@@ -138,6 +138,10 @@ func handlersMethod(rs *service.CaseStudyService, tika *tika.Client, es *es.Elas
 	user := handlers.NewCaseStudyService(rs, tika, es)
 	router.HandleFunc(pat.Post("/gather-links"), user.GatherLinks())
 	router.HandleFunc(pat.Post("/process-link"), user.ProcessCaseStudyLink())
+
+	router.HandleFunc(pat.Get("/healthz"), func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("OK"))
+	})
 	return router
 }
 
