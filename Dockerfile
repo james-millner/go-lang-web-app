@@ -10,5 +10,6 @@ FROM gcr.io/distroless/base
 EXPOSE 8092
 
 COPY --from=builder /go/src/github.com/james-millner/go-lang-web-app/main /main
+COPY --from=builder /go/src/github.com/james-millner/go-lang-web-app/tika-server-1.14.jar tika-server-1.14.jar
 
 ENTRYPOINT ["/main"]
