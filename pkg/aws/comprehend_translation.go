@@ -1,8 +1,9 @@
 package aws
 
 import (
+	"codecommit/go-lang-web-app/pkg/web"
+
 	"github.com/aws/aws-sdk-go-v2/service/comprehend"
-	"github.com/james-millner/go-lang-web-app/pkg/web"
 )
 
 //ComprehendDTO

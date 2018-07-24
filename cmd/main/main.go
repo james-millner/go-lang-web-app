@@ -12,14 +12,16 @@ import (
 	"strconv"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/google/go-tika/tika"
-	"github.com/gorilla/mux"
-	"github.com/james-millner/go-lang-web-app/pkg/db"
 	"github.com/james-millner/go-lang-web-app/pkg/es"
 	"github.com/james-millner/go-lang-web-app/pkg/handlers"
 	"github.com/james-millner/go-lang-web-app/pkg/model"
 	"github.com/james-millner/go-lang-web-app/pkg/service"
+
+	"github.com/james-millner/go-lang-web-app/pkg/db"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/go-tika/tika"
+	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -38,12 +40,14 @@ type Service struct {
 
 //Config struct for holding environment variables.
 type Config struct {
-	HTTPPort   int    `default:"8811"`
+	HTTPPort   int    `default:"8092"`
 	DBPort     int    `default:"3306"`
 	Debug      bool   `default:"false"`
 	DBDialect  string `required:"false"`
+	DBUser     string `default:"root"`
+	DBPassword string `default:""`
 	Hostname   string `default:"localhost"`
-	ElasticURL string `default:"http://localhost:9200"`
+	ElasticURL string `default:"http://elasticsearch:9200"`
 	TikaPort   string `default:"9998"`
 	DBDsn      string
 }

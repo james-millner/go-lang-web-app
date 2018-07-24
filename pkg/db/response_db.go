@@ -2,6 +2,7 @@ package db
 
 import (
 	"github.com/james-millner/go-lang-web-app/pkg/model"
+
 	"github.com/jinzhu/gorm"
 )
 

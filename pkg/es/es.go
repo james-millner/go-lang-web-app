@@ -7,49 +7,9 @@ import (
 
 	"github.com/james-millner/go-lang-web-app/pkg/model"
 	"github.com/james-millner/go-lang-web-app/pkg/web"
+
 	"github.com/olivere/elastic"
 )
-
-var caseStudyMapping = `{
-    "settings": {
-        "number_of_shards": 1,
-        "number_of_replicas": 0
-    },
-        "mappings": {
-            "casestudy": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "sourceUrl": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "companyNumber": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "caseStudyText": {
-                        "type": "string",
-                    },
-                    "organisations": {
-                        "type": "string",
-                        "index": "not_analyzed"
-                    },
-                    "createdAt": {
-                        "type": "date"
-                    },
-                    "updatedAt": {
-                        "type": "date"
-                    },
-                    "identifiedOn": {
-                        "type": "date"
-                    }
-                }
-            }
-        }
-    }`
 
 // Elasticsearch provides the interface of an Elasticsearch client
 type Elasticsearch interface {

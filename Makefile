@@ -1,4 +1,4 @@
-PACKAGE  = go-lang-web-app
+PACKAGE  = go/src/codecommit/go-lang-web-app
 
 clean:
 	go clean
@@ -6,7 +6,6 @@ clean:
 test:
 	go get ./...
 	go get -u github.com/stretchr/testify/assert
-	go test ./...
 
 build:
 	go build cmd/main/main.go

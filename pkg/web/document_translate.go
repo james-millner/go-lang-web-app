@@ -37,18 +37,15 @@ func RetreiveLinksFromDocument(url string, doc *goquery.Document) []string {
 //IsPossibleCaseStudyLink function to determine if a given link mentions, or might be a case studies page.
 func IsPossibleCaseStudyLink(url string) bool {
 
-	caseStudyLink := false
-
-	casestudylinks := []string{"case-studies", "customers", "case_study", "stories", "case-study", "client-stories", "client-story"}
+	casestudylinks := []string{"case-studies", "customers", "case_study", "stories", "case-study", "client-stories", "client-story", "wp-content"}
 
 	for _, i := range casestudylinks {
-		if strings.Contains(strings.ToLower(url), i) {
-			caseStudyLink = true
-			break
+		if strings.Contains(strings.ToLower(url), i) && isProbableLink(url) {
+			return true
 		}
 	}
 
-	return caseStudyLink
+	return false
 }
 
 //IsPDFDocument function to find PDF links. This may be expanded on over time, hence the introduction of its own function.
@@ -58,9 +55,13 @@ func IsPDFDocument(url string) bool {
 
 //IsProbableLink method
 func IsProbableLink(url string) bool {
+	return isProbableLink(url)
+}
 
+func isProbableLink(url string) bool {
 	notInterestedIn := []string{"twitter", "https://t.co/", "youtube.com", "facebook.com", "linkedin.com", "mailto:", "terms-and-conditions", "T&C", "terms", "conditions",
-		"privacy", "policy", "careers", "data-transfers", "pbs.twimg.com", "plus.google.com", "why", "login", "blog", "about-us", "myservices", "yahoo", "renewal", "campaign", "applications", "gartner", "features"}
+		"privacy", "policy", "careers", "data-transfers", "pbs.twimg.com", "plus.google.com", "why", "login", "blog", "about-us", "myservices", "yahoo", "renewal", "campaign", "applications", "gartner", "features",
+		"release", "consultancy", "google.com", "apple.com", "soundcloud.com", "news", "insights"}
 
 	for _, p := range notInterestedIn {
 		if strings.Contains(strings.ToLower(url), p) {

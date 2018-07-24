@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/james-millner/go-lang-web-app/pkg/model"
@@ -56,19 +57,7 @@ func (cs *CaseStudyService) GatherLinks() func(w http.ResponseWriter, r *http.Re
 		fmt.Println("Total links found: ", len(results))
 		fmt.Println("Total case study links found for:", len(links))
 		fmt.Println("Total documents found for:", len(documents))
-
 		fmt.Println("----------")
-
-		for _, a := range links {
-			fmt.Println(a)
-		}
-
-		fmt.Println("----------")
-
-		for _, a := range documents {
-			fmt.Println(a)
-		}
-
 		fmt.Println("Finished processing: " + url)
 
 		enc.Encode(resp)
@@ -84,10 +73,13 @@ func (cs *CaseStudyService) HandleGatheredLinks(url string, results []string) []
 
 	//First Iteration of the given URL.
 	for _, u := range initialLinks {
-		if !web.ArrayContains(results, u) && web.IsProbableLink(u) {
+		log.Println(u)
+		if !web.ArrayContains(results, u) && web.IsPossibleCaseStudyLink(u) {
 			results = append(results, u)
 		}
 	}
+
+	processed = append(processed, url)
 
 	fmt.Println("First iteration complete.")
 	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
@@ -95,36 +87,29 @@ func (cs *CaseStudyService) HandleGatheredLinks(url string, results []string) []
 	for _, u := range results {
 		secondaryLinks, _ := cs.GetLinks(u)
 		for _, s := range secondaryLinks {
-			if !web.ArrayContains(results, s) && web.IsProbableLink(s) {
-				results = append(results, s)
+			if !web.ArrayContains(processed, s) {
+				if !web.ArrayContains(results, s) && web.IsPossibleCaseStudyLink(s) && web.IsPDFDocument(s) {
+					results = append(results, s)
+				}
+				processed = append(processed, s)
 			}
 		}
-		processed = append(processed, u)
 	}
 
 	fmt.Println("Second iteration complete.")
 	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
 
-	for _, u := range results {
-		thirdLinks, _ := cs.GetLinks(u)
-		if !web.ArrayContains(processed, u) {
-			for _, s := range thirdLinks {
-				if !web.ArrayContains(results, s) && web.IsProbableLink(s) {
-					results = append(results, s)
-				}
-			}
-			processed = append(processed, u)
-		}
+	for _, o := range results {
+		log.Println(o)
 	}
 
-	fmt.Println("Third iteration complete.")
-	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
+	log.Println("Finished gathering..")
 
 	return results
 }
 
 //GetLinks Method
-func (rs *CaseStudyService) GetLinks(url string) ([]string, error) {
+func (cs *CaseStudyService) GetLinks(url string) ([]string, error) {
 
 	resp, err := http.Get(url)
 

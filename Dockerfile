@@ -1,9 +1,8 @@
-FROM golang:latest
-COPY ./ /go/src/github.com/james-millner/go-lang-web-app/
-WORKDIR /go/src/github.com/james-millner/go-lang-web-app/
+FROM golang:1.10
+COPY ./ /go/src/codecommit/go-land-web-app/
+WORKDIR /go/src/codecommit/go-land-web-app/
 
-RUN go get ./...
-RUN go get -u github.com/stretchr/testify/assert
-RUN go build cmd/main/main.go
+RUN make test
+RUN make build
 
-CMD ["/main"]
+CMD ["/main"]pwd

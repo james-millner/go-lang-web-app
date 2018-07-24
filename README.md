@@ -1,9 +1,7 @@
-A Simple GoLang WebScraper
+IQBlade - Case Study Microservice
 ----------------------------
 
-[![CircleCI](https://circleci.com/gh/james-millner/go-lang-web-app/tree/master.svg?style=svg&circle-token=b97b68792491c3010205c810362a0e99b1b81db4)](https://circleci.com/gh/james-millner/go-lang-web-app/tree/master)
-
-A simple WebScraper in GoLang app. The app boots up and provides an API to interact and use the service. 
+A simple Case Study Microservice in GoLang. The app boots up and provides an API to interact and use the service. 
 
 ##### Pre Requisites 
 

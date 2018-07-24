@@ -1,10 +1,10 @@
 package web
 
 import (
+	"github.com/james-millner/go-lang-web-app/pkg/model"
 	"testing"
 	"time"
 
-	"github.com/james-millner/go-lang-web-app/pkg/model"
 	"github.com/stretchr/testify/assert"
 )
 

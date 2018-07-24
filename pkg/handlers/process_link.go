@@ -11,9 +11,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/james-millner/go-lang-web-app/pkg/aws"
 	"github.com/james-millner/go-lang-web-app/pkg/model"
+
+	"github.com/grokify/html-strip-tags-go"
+
+	"github.com/google/uuid"
 )
 
 //ProcessCaseStudyLink function.
@@ -49,6 +52,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 		f, err := os.Open(fileName)
 		if err != nil {
+			log.Fatal("Super error.")
 			log.Fatal(err)
 		} else {
 
@@ -59,7 +63,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 				log.Fatal(e)
 			} else {
 
-				body := strings.TrimSpace(body)
+				body := strip.StripTags(body)
 
 				caseStudyObj := cs.saveCaseStudy(body, url, companyNumber)
 
@@ -85,43 +89,49 @@ func (cs *CaseStudyService) saveCaseStudy(body string, url string, companyNumber
 
 	//Substring methodoloy
 	runes := []rune(b)
-	safeSubstring := string(runes[0:4500])
+
+	var caseStudyText string
+
+	if len(runes) > 4500 {
+		caseStudyText = string(runes[0:4500])
+	} else {
+		caseStudyText = string(runes)
+	}
 
 	str, _ := uuid.NewRandom()
 
-	csss := cs.dbs.DB.FindCaseStudyBySourceAndCompanyNumber(url, companyNumber)
+	caseStudyObj := cs.dbs.DB.FindCaseStudyBySourceAndCompanyNumber(url, companyNumber)
 
-	if csss.ID == "" {
-		csss.ID = str.String()
+	if caseStudyObj.ID == "" {
+		caseStudyObj.ID = str.String()
 	}
 
-	csss.IdentifiedOn = time.Now()
-	csss.CaseStudyText = safeSubstring
-	saved := cs.dbs.DB.SaveCaseStudy(csss)
+	caseStudyObj.IdentifiedOn = time.Now()
+	caseStudyObj.CaseStudyText = caseStudyText
 
-	as, _ := aws.RunComprehend([]string{safeSubstring})
+	as, _ := aws.RunComprehend([]string{caseStudyObj.CaseStudyText})
 
 	companies, people := aws.DetermineOrganisationTag(as)
 
-	cs.dbs.DB.DeleteCaseStudyOrganisations(saved.ID)
+	cs.dbs.DB.DeleteCaseStudyOrganisations(caseStudyObj.ID)
 
 	companyArr := []model.CaseStudyOrganisations{}
 	peopleArr := []model.CaseStudyPeople{}
 
 	for _, o := range companies {
-		test := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, saved.ID)
+		test := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, caseStudyObj.ID)
 		obj := cs.dbs.DB.SaveCaseStudyOrganisation(test)
 		companyArr = append(companyArr, *obj)
 	}
 
 	for _, o := range people {
-		test := cs.dbs.DB.FindCaseStudyPersonByNameAndCaseID(o, saved.ID)
+		test := cs.dbs.DB.FindCaseStudyPersonByNameAndCaseID(o, caseStudyObj.ID)
 		obj := cs.dbs.DB.SaveCaseStudyPerson(test)
 		peopleArr = append(peopleArr, *obj)
 	}
 
-	csss.Organizations = companyArr
-	csss.People = peopleArr
+	caseStudyObj.Organizations = companyArr
+	caseStudyObj.People = peopleArr
 
-	return csss
+	return cs.dbs.DB.SaveCaseStudy(caseStudyObj)
 }

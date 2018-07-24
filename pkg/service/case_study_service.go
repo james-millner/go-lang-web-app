@@ -1,8 +1,9 @@
 package service
 
 import (
-	"github.com/google/go-tika/tika"
 	"github.com/james-millner/go-lang-web-app/pkg/db"
+
+	"github.com/google/go-tika/tika"
 	"github.com/jinzhu/gorm"
 )
 

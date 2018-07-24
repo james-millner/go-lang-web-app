@@ -59,6 +59,7 @@ func TestIsPossibleCaseStudyURL(t *testing.T) {
 	assert.Equal(t, true, IsPossibleCaseStudyLink("https://www.iqblade.com/case-studies"))
 	assert.Equal(t, true, IsPossibleCaseStudyLink("https://www.iqblade.com/customers"))
 	assert.Equal(t, true, IsPossibleCaseStudyLink("https://www.iqblade.com/customers"))
+	assert.Equal(t, true, IsPossibleCaseStudyLink("https://www.iqblade.com/wp-content/upload"))
 	assert.Equal(t, true, IsPossibleCaseStudyLink("https://uk.cdw.com/files/9115/0832/7959/CDW_-_Cloud_Spence_Case_Study.pdf"))
 }
 

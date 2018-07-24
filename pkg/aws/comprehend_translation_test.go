@@ -27,9 +27,9 @@ func TestTranslate(t *testing.T) {
 
 	obj := &comprehend.BatchDetectEntitiesOutput{ResultList: arr}
 
-	results := DetermineOrganisationTag(obj)
+	organisations, _ := DetermineOrganisationTag(obj)
 
-	assert.Len(t, results, 2)
-	assert.Equal(t, results[0], "IQBlade")
-	assert.Equal(t, results[1], "Elder")
+	assert.Len(t, organisations, 2)
+	assert.Equal(t, organisations[0], "IQBlade")
+	assert.Equal(t, organisations[1], "Elder")
 }
