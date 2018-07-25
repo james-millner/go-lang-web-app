@@ -161,10 +161,6 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 			config.DBDatabase,
 		)
 
-		log.Println(config.DBHost)
-		log.Println(config.DBPort)
-		log.Println(config.DBDatabase)
-
 		db, err := sql.Open("mysql", dsn)
 		if err != nil {
 			log.Fatalf("Failed to load mysql driver: %v", err)
