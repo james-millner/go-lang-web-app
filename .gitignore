@@ -5,3 +5,5 @@
 *.ipr
 
 .DS_Store
+
+main
