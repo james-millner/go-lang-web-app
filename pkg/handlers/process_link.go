@@ -13,6 +13,7 @@ import (
 
 	"github.com/james-millner/go-lang-web-app/pkg/aws"
 	"github.com/james-millner/go-lang-web-app/pkg/model"
+	"github.com/james-millner/go-lang-web-app/pkg/web"
 
 	"github.com/grokify/html-strip-tags-go"
 
@@ -30,8 +31,9 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 		url := r.FormValue("url")
 		log.Println(companyNumber + " - " + url)
 
-		if url == "" {
-			log.Println("No URL received...")
+		if url == "" || !web.IsPDFDocument(url) {
+			log.Println("Invalid URL received: " + url)
+			enc.Encode(&model.CaseStudyDTO{})
 			return
 		}
 
@@ -50,6 +52,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 		if err != nil {
 			e := fmt.Errorf("Error with GET request: %v", err)
 			log.Fatal(e)
+			return
 		}
 
 		defer resp.Body.Close()
@@ -58,8 +61,8 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 		f, err := os.Open(fileName)
 		if err != nil {
-			log.Fatal("Super error.")
 			log.Fatal(err)
+			return
 		} else {
 
 			body, err := cs.tika.Parse(context.Background(), f)
