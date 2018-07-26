@@ -11,7 +11,8 @@ type ResponseDTO struct {
 
 //CaseStudy entity
 type CaseStudyDTO struct {
-	ID            string	`json:"id"`
+	ID            string    `json:"id"`
+	Title         string    `json:"title"`
 	CompanyNumber string    `json:"companyNumber"`
 	SourceURL     string    `json:"sourceUrl"`
 	CaseStudyText string    `json:"caseStudyText"`

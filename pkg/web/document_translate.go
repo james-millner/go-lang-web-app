@@ -1,6 +1,8 @@
 package web
 
 import (
+	"net/url"
+	"path"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -32,6 +34,16 @@ func RetreiveLinksFromDocument(url string, doc *goquery.Document) []string {
 	})
 
 	return links
+}
+
+func GetFileName(file string) string {
+	fileName, _ := url.QueryUnescape(file)
+	fileName = path.Base(fileName)
+	fileName = strings.Replace(fileName, ".pdf", "", 1)
+	fileName = strings.Replace(fileName, "-", " ", -1)
+	fileNames := strings.Split(fileName, "?")
+	fileName = strings.Title(fileNames[0])
+	return fileName
 }
 
 //IsPossibleCaseStudyLink function to determine if a given link mentions, or might be a case studies page.

@@ -45,7 +45,7 @@ func TestGetPageLinks(t *testing.T) {
 		assert.Fail(t, "Couldn't read document.")
 	}
 
-	links := RetreiveLinksFromDocument("https://test.co.uk",doc)
+	links := RetreiveLinksFromDocument("https://test.co.uk", doc)
 
 	for l := range links {
 		fmt.Println(links[l])
@@ -76,4 +76,11 @@ func TestIsProbableLink(t *testing.T) {
 	assert.Equal(t, false, IsProbableLink("https://www.twitter.com/iqblade"))
 	assert.Equal(t, false, IsProbableLink("https://www.linkedin.com/iqblade"))
 	assert.Equal(t, true, IsProbableLink("https://media.cobcom/site-library/docs/default-source/case-studies-azure/leadent-solutions.pdf?sfvrsn=da1f30ab_6"))
+}
+
+func TestGetFileName(t *testing.T) {
+	assert.Equal(t, "Risk Business", GetFileName("https://media.cobweb.com/site-library/docs/default-source/case-studies-azure/risk-business.pdf?sfvrsn=608c30ab_4"))
+	assert.Equal(t, "Mayday IT Support Managed Services Case Study © Urban Network ", GetFileName("https://www.urbannetwork.co.uk/wp-content/uploads/2017/08/Mayday-IT-Support-Managed-Services-Case-Study-%C2%A9-Urban-Network-.pdf?x86826"))
+	assert.Equal(t, "Splash", GetFileName("https://media.cobweb.com/site-library/docs/default-source/case-studies-azure/splash.pdf?sfvrsn=459730ab_2"))
+	assert.Equal(t, "Lauras International", GetFileName("https://media.cobweb.com/site-library/docs/default-source/case-studies-azure/lauras-international.pdf?sfvrsn=de1f30ab_6"))
 }

@@ -115,6 +115,7 @@ func (cs *CaseStudyService) saveCaseStudy(body string, url string, companyNumber
 		caseStudyObj.ID = str.String()
 	}
 
+	caseStudyObj.Title = web.GetFileName(url)
 	caseStudyObj.IdentifiedOn = time.Now()
 	caseStudyObj.CaseStudyText = caseStudyText
 

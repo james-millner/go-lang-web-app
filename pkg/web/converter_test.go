@@ -16,7 +16,7 @@ func TestTranslateToElastic(t *testing.T) {
 
 	orgArray := []model.CaseStudyOrganisations{*organisation}
 
-	caseStudyObj := &model.CaseStudy{ID: "1", CompanyNumber: "12345", CaseStudyText: "This is the text", SourceURL: "www.superdupercasestudy.com", Organizations: orgArray, CreatedAt: timeNow, UpdatedAt: timeNow, IdentifiedOn: timeNow}
+	caseStudyObj := &model.CaseStudy{ID: "1", Title: "Super Duper CaseStudy", CompanyNumber: "12345", CaseStudyText: "This is the text", SourceURL: "www.superdupercasestudy.com/case-studies/Super-Duper-CaseStudy.pdf?s=98234", Organizations: orgArray, CreatedAt: timeNow, UpdatedAt: timeNow, IdentifiedOn: timeNow}
 
 	caseStudyDTO := TranslateToElastic(*caseStudyObj)
 
@@ -26,6 +26,7 @@ func TestTranslateToElastic(t *testing.T) {
 	assert.Equal(t, caseStudyObj.CreatedAt, caseStudyDTO.CreatedAt)
 	assert.Equal(t, caseStudyObj.UpdatedAt, caseStudyDTO.UpdatedAt)
 	assert.Equal(t, caseStudyObj.IdentifiedOn, caseStudyDTO.IdentifiedOn)
+	assert.Equal(t, caseStudyObj.Title, caseStudyDTO.Title)
 	assert.Len(t, caseStudyDTO.Organizations, 1)
 
 }

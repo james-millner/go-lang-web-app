@@ -7,6 +7,7 @@ func TranslateToElastic(obj model.CaseStudy) model.CaseStudyDTO {
 	var dto model.CaseStudyDTO
 
 	dto.ID = obj.ID
+	dto.Title = obj.Title
 	dto.CompanyNumber = obj.CompanyNumber
 	dto.CaseStudyText = obj.CaseStudyText
 	dto.SourceURL = obj.SourceURL
