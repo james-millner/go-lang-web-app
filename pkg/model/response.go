@@ -15,7 +15,7 @@ type Response struct {
 
 //CaseStudy entity
 type CaseStudy struct {
-	ID            string                   `gorm:"primary_key" size:"70"`
+	ID            string                   `gorm:"primary_key" size:"70" json:"id"`
 	CompanyNumber string                   `gorm:"index:idx_company_number" json:"companyNumber" size:"20"`
 	SourceURL     string                   `gorm:"index:idx_source_url" json:"sourceUrl" size:"200"`
 	CaseStudyText string                   `gorm:"size:7500" json:"caseStudyText"`
