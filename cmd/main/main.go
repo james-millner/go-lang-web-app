@@ -48,7 +48,7 @@ type Config struct {
 	DBUser     string `required:"true"`
 	DBPassword string `required:"true"`
 	DBDatabase string `required:"true" default:"iqblade-casestudies"`
-	ElasticURL string `default:"http://elasticsearch:9200"`
+	ElasticURL string `default:"http://localhost:9200"`
 	TikaPort   string `default:"9998"`
 	DBDsn      string
 }
@@ -153,7 +153,7 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 	switch config.DBDialect {
 	case "mysql":
 		dsn := fmt.Sprintf(
-			"%s:%s@tcp(%s:%d)/%s",
+			"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True",
 			config.DBUser,
 			config.DBPassword,
 			config.DBHost,

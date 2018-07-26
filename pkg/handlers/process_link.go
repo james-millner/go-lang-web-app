@@ -30,6 +30,11 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 		url := r.FormValue("url")
 		log.Println(companyNumber + " - " + url)
 
+		if url == "" {
+			log.Println("No URL received...")
+			return
+		}
+
 		tokens := strings.Split(url, "/")
 		fileName := tokens[len(tokens)-1]
 
@@ -38,6 +43,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 		if oserr != nil {
 			e := fmt.Errorf("Error with creating OS file: %v", oserr)
 			log.Fatal(e)
+			return
 		}
 
 		resp, err := http.Get(url)
