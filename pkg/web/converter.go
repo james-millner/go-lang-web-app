@@ -11,9 +11,9 @@ func TranslateToElastic(obj model.CaseStudy) model.CaseStudyDTO {
 	dto.CompanyNumber = obj.CompanyNumber
 	dto.CaseStudyText = obj.CaseStudyText
 	dto.SourceURL = obj.SourceURL
-	dto.CreatedAt = obj.CreatedAt
-	dto.IdentifiedOn = obj.IdentifiedOn
-	dto.UpdatedAt = obj.UpdatedAt
+	dto.CreatedAt = obj.CreatedAt.Format("2006-01-02")
+	dto.IdentifiedOn = obj.IdentifiedOn.Format("2006-01-02")
+	dto.UpdatedAt = obj.UpdatedAt.Format("2006-01-02")
 
 	companies := []string{}
 	people := []string{}

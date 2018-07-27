@@ -76,9 +76,11 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 				caseStudyObj := cs.saveCaseStudy(body, url, companyNumber)
 
+				dto := web.TranslateToElastic(*caseStudyObj)
+
 				ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
 
-				esErr := cs.es.PutRecord(ctx, *caseStudyObj)
+				esErr := cs.es.PutRecord(ctx, dto)
 
 				if esErr != nil {
 					log.Fatalf("failed to put record into elasticsearch: %v", err)
@@ -86,7 +88,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 				defer f.Close()
 				defer os.Remove(fileName)
-				enc.Encode(caseStudyObj)
+				enc.Encode(dto)
 			}
 		}
 	}

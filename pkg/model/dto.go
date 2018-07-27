@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 //ResponseDTO Object for returing to the user / client.
 type ResponseDTO struct {
 	SourceURL string   `json:"source"`
@@ -11,14 +9,14 @@ type ResponseDTO struct {
 
 //CaseStudy entity
 type CaseStudyDTO struct {
-	ID            string    `json:"id"`
-	Title         string    `json:"title"`
-	CompanyNumber string    `json:"companyNumber"`
-	SourceURL     string    `json:"sourceUrl"`
-	CaseStudyText string    `json:"caseStudyText"`
-	Organizations []string  `json:"organisations"`
-	People        []string  `json:"people"`
-	IdentifiedOn  time.Time `json:"identifiedOn"`
-	CreatedAt     time.Time `json:"createdAt"`
-	UpdatedAt     time.Time `json:"updatedAt"`
+	ID            string   `json:"id"`
+	Title         string   `json:"title"`
+	CompanyNumber string   `json:"companyNumber"`
+	SourceURL     string   `json:"sourceUrl"`
+	CaseStudyText string   `json:"caseStudyText"`
+	Organizations []string `json:"organisations"`
+	People        []string `json:"people"`
+	IdentifiedOn  string   `json:"identifiedOn"`
+	CreatedAt     string   `json:"createdAt"`
+	UpdatedAt     string   `json:"updatedAt"`
 }

@@ -37,9 +37,13 @@ func RetreiveLinksFromDocument(url string, doc *goquery.Document) []string {
 }
 
 func GetFileName(file string) string {
-	fileName, _ := url.QueryUnescape(file)
-	fileName = path.Base(fileName)
-	fileName = strings.Replace(fileName, ".pdf", "", 1)
+	fileName, err := url.QueryUnescape(file)
+
+	if err == nil {
+		fileName = path.Base(fileName)
+		fileName = strings.Replace(fileName, ".pdf", "", 1)
+	}
+	
 	fileName = strings.Replace(fileName, "-", " ", -1)
 	fileNames := strings.Split(fileName, "?")
 	fileName = strings.Title(fileNames[0])

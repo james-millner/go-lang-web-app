@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/james-millner/go-lang-web-app/pkg/model"
-	"github.com/james-millner/go-lang-web-app/pkg/web"
 
 	"github.com/olivere/elastic"
 )
@@ -29,7 +28,7 @@ func New(client *elastic.Client) *Elastic {
 }
 
 // PutRecord receives a byte slice for putting a record into Elasticsearch
-func (e *Elastic) PutRecord(ctx context.Context, study model.CaseStudy) error {
+func (e *Elastic) PutRecord(ctx context.Context, dto model.CaseStudyDTO) error {
 	index := "organisation-case-studies"
 
 	err := e.ensureIndexExists(ctx, index)
@@ -37,8 +36,6 @@ func (e *Elastic) PutRecord(ctx context.Context, study model.CaseStudy) error {
 		log.Fatalf("Error: %v", err)
 		return err
 	}
-
-	dto := web.TranslateToElastic(study)
 
 	e.client.Index().
 		Index(index).
