@@ -1,16 +1,19 @@
 package web
 
 import (
-	"github.com/james-millner/go-lang-web-app/pkg/model"
 	"testing"
 	"time"
+
+	"github.com/james-millner/go-lang-web-app/pkg/model"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTranslateToElastic(t *testing.T) {
 
-	timeNow := time.Now()
+	layout := "2006-01-02T15:04:05.000Z"
+	str := "2014-11-12T11:45:26.371Z"
+	timeNow, _ := time.Parse(layout, str)
 
 	organisation := &model.CaseStudyOrganisations{CaseStudyID: "1", OrganisationName: "IQBlade"}
 
@@ -23,9 +26,9 @@ func TestTranslateToElastic(t *testing.T) {
 	assert.Equal(t, caseStudyObj.SourceURL, caseStudyDTO.SourceURL)
 	assert.Equal(t, caseStudyObj.CaseStudyText, caseStudyDTO.CaseStudyText)
 	assert.Equal(t, caseStudyObj.CompanyNumber, caseStudyDTO.CompanyNumber)
-	assert.Equal(t, caseStudyObj.CreatedAt, caseStudyDTO.CreatedAt)
-	assert.Equal(t, caseStudyObj.UpdatedAt, caseStudyDTO.UpdatedAt)
-	assert.Equal(t, caseStudyObj.IdentifiedOn, caseStudyDTO.IdentifiedOn)
+	assert.Equal(t, caseStudyDTO.CreatedAt, "2014-11-12")
+	assert.Equal(t, caseStudyDTO.UpdatedAt,  "2014-11-12")
+	assert.Equal(t, caseStudyDTO.IdentifiedOn,  "2014-11-12")
 	assert.Equal(t, caseStudyObj.Title, caseStudyDTO.Title)
 	assert.Len(t, caseStudyDTO.Organizations, 1)
 
