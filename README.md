@@ -24,11 +24,14 @@ Warning Beginner Gopher here.
 Build & Run app
 ---------------
 ```
-	HTTPPort   int    `default:"8811"`
-	DBPort     int    `default:"3306"`
+	HTTPPort   int    `default:"8092"`
 	Debug      bool   `default:"false"`
 	DBDialect  string `required:"false"`
-	Hostname   string `default:"localhost"`
+	DBHost     string `required:"true" default:"localhost"`
+	DBPort     int    `required:"true" default:"3306"`
+	DBUser     string `required:"true"`
+	DBPassword string `required:"true"`
+	DBDatabase string `required:"true" default:"DB_SCHEMA_NAME"`
 	ElasticURL string `default:"http://localhost:9200"`
 	TikaPort   string `default:"9998"`
 	DBDsn      string
