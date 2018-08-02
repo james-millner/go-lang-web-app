@@ -1,7 +1,6 @@
 package web
 
 import (
-	"fmt"
 	"log"
 	"net/url"
 	"path"
@@ -100,8 +99,7 @@ func TranslateMetaDataRowTime(metaRow string) time.Time {
 	result, err := dateparse.ParseAny(str)
 
 	if err != nil {
-		e := fmt.Errorf("Error with date parse: ", err)
-		log.Fatal(e)
+		log.Fatal(err)
 		return time.Now()
 	}
 
