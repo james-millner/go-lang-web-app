@@ -71,8 +71,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 			meta, metaErr := cs.tika.MetaField(context.Background(), c, "Last-Save-Date")
 
 			if metaErr != nil {
-				e := fmt.Errorf("Couldn't grab meta data: ", metaErr)
-				log.Fatal(e)
+				log.Fatal(metaErr)
 			}
 
 			if err != nil {
