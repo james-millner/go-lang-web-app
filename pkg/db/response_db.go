@@ -102,6 +102,17 @@ func (d *DB) SaveCaseStudyPerson(c *model.CaseStudyPeople) *model.CaseStudyPeopl
 	return c
 }
 
+//SaveCaseStudyLocation function; to save locations against a Case Study
+func (d *DB) SaveCaseStudyLocation(c *model.CaseStudyLocations) *model.CaseStudyLocations {
+	if d.db.NewRecord(c) {
+		d.db.Create(&c)
+	} else {
+		d.db.Save(&c)
+	}
+
+	return c
+}
+
 //FindCaseStudyBySourceAndCompanyNumber function
 func (d *DB) FindCaseStudyBySourceAndCompanyNumber(source string, companyNumber string) *model.CaseStudy {
 	var c model.CaseStudy
@@ -129,6 +140,14 @@ func (d *DB) DeleteCaseStudyPeople(caseStudyId string) {
 	d.db.Delete(&c)
 }
 
+//DeleteCaseStudyLocation function
+func (d *DB) DeleteCaseStudyLocations(caseStudyId string) {
+	var c model.CaseStudyLocations
+	c.CaseStudyID = caseStudyId
+
+	d.db.Delete(&c)
+}
+
 //FindCaseStudyOrganisationByNameAndCaseID function
 func (d *DB) FindCaseStudyOrganisationByNameAndCaseID(organisationName string, id string) *model.CaseStudyOrganisations {
 	var c model.CaseStudyOrganisations
@@ -143,6 +162,16 @@ func (d *DB) FindCaseStudyOrganisationByNameAndCaseID(organisationName string, i
 func (d *DB) FindCaseStudyPersonByNameAndCaseID(personName string, id string) *model.CaseStudyPeople {
 	var c model.CaseStudyPeople
 	c.PersonName = personName
+	c.CaseStudyID = id
+	d.db.Where(&c).First(&c)
+
+	return &c
+}
+
+//FindCaseStudyLocationByLocationAndCaseID function
+func (d *DB) FindCaseStudyLocationByLocationAndCaseID(location string, id string) *model.CaseStudyLocations {
+	var c model.CaseStudyLocations
+	c.Location = location
 	c.CaseStudyID = id
 	d.db.Where(&c).First(&c)
 

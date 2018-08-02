@@ -17,6 +17,7 @@ func TranslateToElastic(obj model.CaseStudy) model.CaseStudyDTO {
 
 	companies := []string{}
 	people := []string{}
+	locations := []string{}
 
 	for _, o := range obj.Organizations {
 		companies = append(companies, o.OrganisationName)
@@ -26,8 +27,13 @@ func TranslateToElastic(obj model.CaseStudy) model.CaseStudyDTO {
 		people = append(people, p.PersonName)
 	}
 
+	for _, l := range obj.Locations {
+		locations = append(locations, l.Location)
+	}
+
 	dto.Organizations = companies
 	dto.People = people
+	dto.Locations = locations
 
 	return dto
 

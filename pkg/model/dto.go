@@ -16,6 +16,7 @@ type CaseStudyDTO struct {
 	CaseStudyText string   `json:"caseStudyText"`
 	Organizations []string `json:"organisations"`
 	People        []string `json:"people"`
+	Locations     []string `json:"locations"`
 	IdentifiedOn  string   `json:"identifiedOn"`
 	CreatedAt     string   `json:"createdAt"`
 	UpdatedAt     string   `json:"updatedAt"`

@@ -60,12 +60,20 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 		io.Copy(out, resp.Body)
 
 		f, err := os.Open(fileName)
+		c, _ := os.Open(fileName)
+
 		if err != nil {
 			log.Fatal(err)
 			return
 		} else {
 
 			body, err := cs.tika.Parse(context.Background(), f)
+			meta, metaErr := cs.tika.MetaField(context.Background(), c, "Last-Save-Date")
+
+			if metaErr != nil {
+				e := fmt.Errorf("Couldn't grab meta data: ", metaErr)
+				log.Fatal(e)
+			}
 
 			if err != nil {
 				e := fmt.Errorf("Error with TikaClient parse: %v", err)
@@ -74,7 +82,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 
 				body := strip.StripTags(body)
 
-				caseStudyObj := cs.saveCaseStudy(body, url, companyNumber)
+				caseStudyObj := cs.saveCaseStudy(body, url, companyNumber, meta)
 
 				dto := web.TranslateToElastic(*caseStudyObj)
 
@@ -94,7 +102,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 	}
 }
 
-func (cs *CaseStudyService) saveCaseStudy(body string, url string, companyNumber string) *model.CaseStudy {
+func (cs *CaseStudyService) saveCaseStudy(body string, url string, companyNumber string, createdDate string) *model.CaseStudy {
 	b := strings.TrimSpace(body)
 	b = strings.Replace(b, "\n", "", -1)
 
@@ -118,32 +126,43 @@ func (cs *CaseStudyService) saveCaseStudy(body string, url string, companyNumber
 	}
 
 	caseStudyObj.Title = web.GetFileName(url)
+	caseStudyObj.CreatedAt = web.TranslateMetaDataRowTime(createdDate)
 	caseStudyObj.IdentifiedOn = time.Now()
 	caseStudyObj.CaseStudyText = caseStudyText
 
 	as, _ := aws.RunComprehend([]string{caseStudyObj.CaseStudyText})
 
-	companies, people := aws.DetermineOrganisationTag(as)
+	companies, people, locations := aws.DetermineOrganisationTag(as)
 
 	cs.dbs.DB.DeleteCaseStudyOrganisations(caseStudyObj.ID)
+	cs.dbs.DB.DeleteCaseStudyPeople(caseStudyObj.ID)
+	cs.dbs.DB.DeleteCaseStudyLocations(caseStudyObj.ID)
 
 	companyArr := []model.CaseStudyOrganisations{}
 	peopleArr := []model.CaseStudyPeople{}
+	locationsArr := []model.CaseStudyLocations{}
 
 	for _, o := range companies {
-		test := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, caseStudyObj.ID)
-		obj := cs.dbs.DB.SaveCaseStudyOrganisation(test)
-		companyArr = append(companyArr, *obj)
+		dbObj := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, caseStudyObj.ID)
+		dbObj.OrganisationName = o
+		companyArr = append(companyArr, *dbObj)
 	}
 
 	for _, o := range people {
-		test := cs.dbs.DB.FindCaseStudyPersonByNameAndCaseID(o, caseStudyObj.ID)
-		obj := cs.dbs.DB.SaveCaseStudyPerson(test)
-		peopleArr = append(peopleArr, *obj)
+		dbObj := cs.dbs.DB.FindCaseStudyPersonByNameAndCaseID(o, caseStudyObj.ID)
+		dbObj.PersonName = o
+		peopleArr = append(peopleArr, *dbObj)
+	}
+
+	for _, o := range locations {
+		dbObj := cs.dbs.DB.FindCaseStudyLocationByLocationAndCaseID(o, caseStudyObj.ID)
+		dbObj.Location = o
+		locationsArr = append(locationsArr, *dbObj)
 	}
 
 	caseStudyObj.Organizations = companyArr
 	caseStudyObj.People = peopleArr
+	caseStudyObj.Locations = locationsArr
 
 	return cs.dbs.DB.SaveCaseStudy(caseStudyObj)
 }

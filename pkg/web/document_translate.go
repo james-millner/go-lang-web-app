@@ -1,11 +1,15 @@
 package web
 
 import (
+	"fmt"
+	"log"
 	"net/url"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/araddon/dateparse"
 )
 
 //RetreiveLinksFromDocument method
@@ -43,7 +47,7 @@ func GetFileName(file string) string {
 		fileName = path.Base(fileName)
 		fileName = strings.Replace(fileName, ".pdf", "", 1)
 	}
-	
+
 	fileName = strings.Replace(fileName, "-", " ", -1)
 	fileNames := strings.Split(fileName, "?")
 	fileName = strings.Title(fileNames[0])
@@ -86,4 +90,20 @@ func isProbableLink(url string) bool {
 	}
 
 	return true
+}
+
+func TranslateMetaDataRowTime(metaRow string) time.Time {
+	strs := strings.Split(metaRow, ",")
+	str := strs[1]
+	str = strings.Replace(str, "\"", "", -1)
+
+	result, err := dateparse.ParseAny(str)
+
+	if err != nil {
+		e := fmt.Errorf("Error with date parse: ", err)
+		log.Fatal(e)
+		return time.Now()
+	}
+
+	return result
 }

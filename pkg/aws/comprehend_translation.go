@@ -13,12 +13,13 @@ type ComprehendDTO struct {
 }
 
 //DetermineOrganisationTag method
-func DetermineOrganisationTag(output *comprehend.BatchDetectEntitiesOutput) ([]string, []string) {
+func DetermineOrganisationTag(output *comprehend.BatchDetectEntitiesOutput) ([]string, []string, []string) {
 
 	results := output.ResultList
 
 	organisations := []string{}
 	people := []string{}
+	locations := []string{}
 
 	for _, obj := range results {
 		for _, o := range obj.Entities {
@@ -30,9 +31,13 @@ func DetermineOrganisationTag(output *comprehend.BatchDetectEntitiesOutput) ([]s
 			if o.Type == comprehend.EntityTypePerson && !web.ArrayContains(people, *o.Text) {
 				people = append(people, *o.Text)
 			}
+
+			if o.Type == comprehend.EntityTypeLocation && !web.ArrayContains(locations, *o.Text) {
+				locations = append(locations, *o.Text)
+			}
 		}
 	}
 
-	return organisations, people
+	return organisations, people, locations
 
 }

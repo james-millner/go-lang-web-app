@@ -22,6 +22,7 @@ type CaseStudy struct {
 	CaseStudyText string                   `gorm:"size:7500" json:"caseStudyText"`
 	Organizations []CaseStudyOrganisations `gorm:"one2many:case_studies_organisations;" json:"organisations"`
 	People        []CaseStudyPeople        `gorm:"one2many:case_studies_people;" json:"people"`
+	Locations     []CaseStudyLocations     `gorm:"one2many:case_studies_locations;" json:"locations"`
 	IdentifiedOn  time.Time                `json:"identifiedOn"`
 	CreatedAt     time.Time                `json:"createdAt"`
 	UpdatedAt     time.Time                `json:"updatedAt"`
@@ -37,4 +38,10 @@ type CaseStudyOrganisations struct {
 type CaseStudyPeople struct {
 	CaseStudyID string `json:"caseStudyId"`
 	PersonName  string `gorm:"index:idx_person_name" json:"peopleName"`
+}
+
+//CaseStudyPeople entity
+type CaseStudyLocations struct {
+	CaseStudyID string `json:"caseStudyId"`
+	Location    string `gorm:"index:idx_location" json:"location"`
 }

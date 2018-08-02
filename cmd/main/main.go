@@ -180,6 +180,7 @@ func openDBConnection(config *Config) (*gorm.DB, error) {
 		&model.CaseStudy{},
 		&model.CaseStudyOrganisations{},
 		&model.CaseStudyPeople{},
+		&model.CaseStudyLocations{},
 	)
 
 	return gormDB, nil
