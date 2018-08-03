@@ -92,6 +92,10 @@ func isProbableLink(url string) bool {
 }
 
 func TranslateMetaDataRowTime(metaRow string) time.Time {
+	if metaRow == "" {
+		return time.Now()
+	}
+
 	strs := strings.Split(metaRow, ",")
 	str := strs[1]
 	str = strings.Replace(str, "\"", "", -1)
