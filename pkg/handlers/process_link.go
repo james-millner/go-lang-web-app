@@ -142,20 +142,17 @@ func (cs *CaseStudyService) saveCaseStudy(body string, url string, companyNumber
 	locationsArr := []model.CaseStudyLocations{}
 
 	for _, o := range companies {
-		dbObj := cs.dbs.DB.FindCaseStudyOrganisationByNameAndCaseID(o, caseStudyObj.ID)
-		dbObj.OrganisationName = o
+		dbObj := &model.CaseStudyOrganisations{CaseStudyID: caseStudyObj.ID, OrganisationName: o}
 		companyArr = append(companyArr, *dbObj)
 	}
 
 	for _, o := range people {
-		dbObj := cs.dbs.DB.FindCaseStudyPersonByNameAndCaseID(o, caseStudyObj.ID)
-		dbObj.PersonName = o
+		dbObj := &model.CaseStudyPeople{CaseStudyID: caseStudyObj.ID, PersonName: o}
 		peopleArr = append(peopleArr, *dbObj)
 	}
 
 	for _, o := range locations {
-		dbObj := cs.dbs.DB.FindCaseStudyLocationByLocationAndCaseID(o, caseStudyObj.ID)
-		dbObj.Location = o
+		dbObj := &model.CaseStudyLocations{CaseStudyID: caseStudyObj.ID, Location: o}
 		locationsArr = append(locationsArr, *dbObj)
 	}
 

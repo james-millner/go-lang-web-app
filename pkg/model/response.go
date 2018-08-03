@@ -30,18 +30,18 @@ type CaseStudy struct {
 
 //CaseStudyOrganisations entity
 type CaseStudyOrganisations struct {
-	CaseStudyID      string `json:"caseStudyId"`
+	CaseStudyID      string `json:"caseStudyId" gorm:"association_foreignkey:CaseStudyID"`
 	OrganisationName string `gorm:"index:idx_organisation" json:"organisationName"`
 }
 
 //CaseStudyPeople entity
 type CaseStudyPeople struct {
-	CaseStudyID string `json:"caseStudyId"`
+	CaseStudyID string `json:"caseStudyId" gorm:"association_foreignkey:CaseStudyID"`
 	PersonName  string `gorm:"index:idx_person_name" json:"peopleName"`
 }
 
 //CaseStudyPeople entity
 type CaseStudyLocations struct {
-	CaseStudyID string `json:"caseStudyId"`
+	CaseStudyID string `json:"caseStudyId" gorm:"association_foreignkey:CaseStudyID"`
 	Location    string `gorm:"index:idx_location" json:"location"`
 }

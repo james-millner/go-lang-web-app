@@ -126,26 +126,17 @@ func (d *DB) FindCaseStudyBySourceAndCompanyNumber(source string, companyNumber 
 
 //DeleteCaseStudyOrganisations function
 func (d *DB) DeleteCaseStudyOrganisations(caseStudyId string) {
-	var c model.CaseStudyOrganisations
-	c.CaseStudyID = caseStudyId
-
-	d.db.Delete(&c)
+	d.db.Where("case_study_id = ?", caseStudyId).Delete(model.CaseStudyOrganisations{})
 }
 
 //DeleteCaseStudyPeople function
 func (d *DB) DeleteCaseStudyPeople(caseStudyId string) {
-	var c model.CaseStudyPeople
-	c.CaseStudyID = caseStudyId
-
-	d.db.Delete(&c)
+	d.db.Where("case_study_id = ?", caseStudyId).Delete(model.CaseStudyPeople{})
 }
 
 //DeleteCaseStudyLocation function
 func (d *DB) DeleteCaseStudyLocations(caseStudyId string) {
-	var c model.CaseStudyLocations
-	c.CaseStudyID = caseStudyId
-
-	d.db.Delete(&c)
+	d.db.Where("case_study_id = ?", caseStudyId).Delete(model.CaseStudyLocations{})
 }
 
 //FindCaseStudyOrganisationByNameAndCaseID function
