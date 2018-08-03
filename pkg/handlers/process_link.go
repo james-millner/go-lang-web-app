@@ -74,10 +74,11 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 			meta, metaErr := cs.tika.MetaField(context.Background(), c, "Last-Save-Date")
 
 			if metaErr != nil {
-				log.Fatal(metaErr)
+				e := fmt.Errorf("Error with Meta Data grab: %v", metaErr)
+				log.Fatal(e)
 			}
 
-			if err != nil && metaErr != nil  {
+			if err != nil && metaErr != nil {
 				e := fmt.Errorf("Error with TikaClient parse: %v", err)
 				log.Fatal(e)
 			} else {
@@ -95,7 +96,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 				if esErr != nil {
 					log.Fatalf("failed to put record into elasticsearch: %v", err)
 				}
-				
+
 				enc.Encode(dto)
 			}
 		}
