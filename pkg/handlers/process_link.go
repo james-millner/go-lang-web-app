@@ -62,6 +62,9 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 		f, err := os.Open(fileName)
 		c, _ := os.Open(fileName)
 
+		defer f.Close()
+		defer os.Remove(fileName)
+
 		if err != nil {
 			log.Fatal(err)
 			return
@@ -74,7 +77,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 				log.Fatal(metaErr)
 			}
 
-			if err != nil {
+			if err != nil && metaErr != nil  {
 				e := fmt.Errorf("Error with TikaClient parse: %v", err)
 				log.Fatal(e)
 			} else {
@@ -92,9 +95,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 				if esErr != nil {
 					log.Fatalf("failed to put record into elasticsearch: %v", err)
 				}
-
-				defer f.Close()
-				defer os.Remove(fileName)
+				
 				enc.Encode(dto)
 			}
 		}
