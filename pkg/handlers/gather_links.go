@@ -77,7 +77,7 @@ func (cs *CaseStudyService) HandleGatheredLinks(url string, results []string) []
 
 	//First Iteration of the given URL.
 	for _, u := range initialLinks {
-		if !strings.Contains(u, url) {
+		if !strings.Contains(u, "http") {
 			u = url + u
 		}
 
@@ -96,7 +96,7 @@ func (cs *CaseStudyService) HandleGatheredLinks(url string, results []string) []
 	for _, u := range results {
 		secondaryLinks, _ := cs.GetLinks(u)
 		for _, s := range secondaryLinks {
-			if !strings.Contains(s, url) {
+			if !strings.Contains(s, "http") {
 				s = url + s
 			}
 
@@ -117,7 +117,7 @@ func (cs *CaseStudyService) HandleGatheredLinks(url string, results []string) []
 	for _, u := range results {
 		thirdLevelLinks, _ := cs.GetLinks(u)
 		for _, s := range thirdLevelLinks {
-			if !strings.Contains(s, url) {
+			if !strings.Contains(s, "http") {
 				s = url + s
 			}
 
