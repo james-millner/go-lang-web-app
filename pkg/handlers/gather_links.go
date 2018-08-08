@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/james-millner/go-lang-web-app/pkg/model"
 	"github.com/james-millner/go-lang-web-app/pkg/web"
@@ -76,7 +77,12 @@ func (cs *CaseStudyService) HandleGatheredLinks(url string, results []string) []
 
 	//First Iteration of the given URL.
 	for _, u := range initialLinks {
+		if !strings.Contains(u, url) {
+			u = url + u
+		}
+
 		log.Println(u)
+
 		if !web.ArrayContains(results, u) && web.IsPossibleCaseStudyLink(u) {
 			results = append(results, u)
 		}
@@ -90,6 +96,12 @@ func (cs *CaseStudyService) HandleGatheredLinks(url string, results []string) []
 	for _, u := range results {
 		secondaryLinks, _ := cs.GetLinks(u)
 		for _, s := range secondaryLinks {
+			if !strings.Contains(s, url) {
+				s = url + s
+			}
+
+			log.Println(s)
+
 			if !web.ArrayContains(processed, s) {
 				if !web.ArrayContains(results, s) && web.IsPossibleCaseStudyLink(s) && web.IsPDFDocument(s) {
 					results = append(results, s)
@@ -105,6 +117,12 @@ func (cs *CaseStudyService) HandleGatheredLinks(url string, results []string) []
 	for _, u := range results {
 		thirdLevelLinks, _ := cs.GetLinks(u)
 		for _, s := range thirdLevelLinks {
+			if !strings.Contains(s, url) {
+				s = url + s
+			}
+
+			log.Println(s)
+
 			if !web.ArrayContains(processed, s) {
 				if !web.ArrayContains(results, s) && web.IsPossibleCaseStudyLink(s) && web.IsPDFDocument(s) {
 					results = append(results, s)
@@ -114,10 +132,8 @@ func (cs *CaseStudyService) HandleGatheredLinks(url string, results []string) []
 		}
 	}
 
-	for _, o := range results {
-		log.Println(o)
-	}
-
+	fmt.Println("Third iteration complete.")
+	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
 	log.Println("Finished gathering..")
 
 	return results
