@@ -77,14 +77,12 @@ func (cs *CaseStudyService) GatherLinksFromBaseURL(url string, results []string)
 
 	//First Iteration of the given URL.
 	for _, u := range initialLinks {
-		if !strings.Contains(u, "http") {
-			u = url + u
-		}
+		up := validateURLStructure(url, u)
 
-		log.Println(u)
+		log.Println(up)
 
-		if !web.ArrayContains(results, u) && web.IsPossibleCaseStudyLink(u) {
-			results = append(results, u)
+		if !web.ArrayContains(results, up) && web.IsPossibleCaseStudyLink(up) {
+			results = append(results, up)
 		}
 	}
 
@@ -94,20 +92,16 @@ func (cs *CaseStudyService) GatherLinksFromBaseURL(url string, results []string)
 	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
 
 	for _, u := range results {
-		secondaryLinks, _ := cs.GetLinks(u)
-		for _, s := range secondaryLinks {
-			if !strings.Contains(s, "http") {
-				s = url + s
-			}
+		if !web.ArrayContains(processed, u) {
+			secondaryLinks, _ := cs.GetLinks(u)
+			for _, s := range secondaryLinks {
+				up := validateURLStructure(url, s)
 
-			log.Println(s)
+				log.Println(up)
 
-			if !web.ArrayContains(processed, s) {
-				if !web.ArrayContains(results, s) && web.IsPossibleCaseStudyLink(s) && web.IsPDFDocument(s) {
-					results = append(results, s)
-				}
-				processed = append(processed, s)
+				processed, results = update(up, processed, results)
 			}
+			processed = append(processed, u)
 		}
 	}
 
@@ -115,20 +109,16 @@ func (cs *CaseStudyService) GatherLinksFromBaseURL(url string, results []string)
 	fmt.Println(fmt.Sprintf("%s%d", "Results size: ", len(results)))
 
 	for _, u := range results {
-		thirdLevelLinks, _ := cs.GetLinks(u)
-		for _, s := range thirdLevelLinks {
-			if !strings.Contains(s, "http") {
-				s = url + s
-			}
+		if !web.ArrayContains(processed, u) {
+			thirdLevelLinks, _ := cs.GetLinks(u)
+			for _, s := range thirdLevelLinks {
+				up := validateURLStructure(url, s)
 
-			log.Println(s)
+				log.Println(up)
 
-			if !web.ArrayContains(processed, s) {
-				if !web.ArrayContains(results, s) && web.IsPossibleCaseStudyLink(s) && web.IsPDFDocument(s) {
-					results = append(results, s)
-				}
-				processed = append(processed, s)
+				processed, results = update(up, processed, results)
 			}
+			processed = append(processed, u)
 		}
 	}
 
@@ -137,6 +127,24 @@ func (cs *CaseStudyService) GatherLinksFromBaseURL(url string, results []string)
 	log.Println("Finished gathering..")
 
 	return results
+}
+
+func validateURLStructure(baseurl string, foundurl string) string {
+	if !strings.Contains(foundurl, "http") {
+		return baseurl + foundurl
+	}
+
+	return foundurl
+}
+
+func update(url string, processed []string, results []string) ([]string, []string) {
+	if !web.ArrayContains(processed, url) {
+		if !web.ArrayContains(results, url) && web.IsPossibleCaseStudyLink(url) {
+			results = append(results, url)
+		}
+	}
+
+	return processed, results
 }
 
 //GetLinks Method
