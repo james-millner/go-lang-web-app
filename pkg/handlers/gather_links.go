@@ -31,7 +31,7 @@ func (cs *CaseStudyService) GatherLinks() func(w http.ResponseWriter, r *http.Re
 
 		var array []string
 
-		results := cs.HandleGatheredLinks(url, array)
+		results := cs.GatherLinksFromBaseURL(url, array)
 
 		fmt.Println("Finished Looping.")
 
@@ -68,8 +68,8 @@ func (cs *CaseStudyService) GatherLinks() func(w http.ResponseWriter, r *http.Re
 	}
 }
 
-//HandleGatheredLinks method
-func (cs *CaseStudyService) HandleGatheredLinks(url string, results []string) []string {
+//GatherLinksFromBaseURL method
+func (cs *CaseStudyService) GatherLinksFromBaseURL(url string, results []string) []string {
 
 	var processed []string
 
