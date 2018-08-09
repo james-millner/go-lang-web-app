@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/james-millner/go-lang-web-app/pkg/aws"
-	"github.com/james-millner/go-lang-web-app/pkg/model"
-	"github.com/james-millner/go-lang-web-app/pkg/web"
+	"github.com/iqblade/casestudies/pkg/aws"
+	"github.com/iqblade/casestudies/pkg/model"
+	"github.com/iqblade/casestudies/pkg/web"
 
 	"github.com/grokify/html-strip-tags-go"
 

@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"github.com/google/go-tika/tika"
-	"github.com/james-millner/go-lang-web-app/pkg/es"
-	"github.com/james-millner/go-lang-web-app/pkg/service"
+	"github.com/iqblade/casestudies/pkg/es"
+	"github.com/iqblade/casestudies/pkg/service"
 )
 
 // ResponseService to be used to handle communication to the DB and Service Methods.
