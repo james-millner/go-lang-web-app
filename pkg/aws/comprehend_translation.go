@@ -1,18 +1,22 @@
 package aws
 
 import (
+<<<<<<< HEAD
 	"github.com/james-millner/go-lang-web-app/pkg/web"
 
+=======
+>>>>>>> master
 	"github.com/aws/aws-sdk-go-v2/service/comprehend"
+	"github.com/james-millner/go-lang-web-app/pkg/web"
 )
 
-//ComprehendDTO
+// ComprehendDTO
 type ComprehendDTO struct {
 	Text string
 	Tag  string
 }
 
-//DetermineOrganisationTag method
+// DetermineOrganisationTag method
 func DetermineOrganisationTag(output *comprehend.BatchDetectEntitiesOutput) ([]string, []string, []string) {
 
 	results := output.ResultList

@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"time"
 
+<<<<<<< HEAD
 	"github.com/james-millner/go-lang-web-app/pkg/es"
 	"github.com/james-millner/go-lang-web-app/pkg/handlers"
 	"github.com/james-millner/go-lang-web-app/pkg/model"
@@ -19,9 +20,16 @@ import (
 
 	"github.com/james-millner/go-lang-web-app/pkg/db"
 
+=======
+>>>>>>> master
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/go-tika/tika"
 	"github.com/gorilla/mux"
+	"github.com/james-millner/go-lang-web-app/pkg/db"
+	"github.com/james-millner/go-lang-web-app/pkg/es"
+	"github.com/james-millner/go-lang-web-app/pkg/handlers"
+	"github.com/james-millner/go-lang-web-app/pkg/model"
+	"github.com/james-millner/go-lang-web-app/pkg/service"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"

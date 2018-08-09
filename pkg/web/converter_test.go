@@ -5,7 +5,10 @@ import (
 	"time"
 
 	"github.com/james-millner/go-lang-web-app/pkg/model"
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 	"github.com/stretchr/testify/assert"
 )
 

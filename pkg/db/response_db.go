@@ -2,7 +2,10 @@ package db
 
 import (
 	"github.com/james-millner/go-lang-web-app/pkg/model"
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 	"github.com/jinzhu/gorm"
 )
 
