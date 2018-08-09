@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/google/go-tika/tika"
-	"github.com/iqblade/casestudies/pkg/db"
+	"github.com/james-millner/go-lang-web-app/pkg/db"
 	"github.com/stretchr/testify/assert"
 )
 

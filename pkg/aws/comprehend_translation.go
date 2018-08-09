@@ -2,7 +2,7 @@ package aws
 
 import (
 	"github.com/aws/aws-sdk-go-v2/service/comprehend"
-	"github.com/iqblade/casestudies/pkg/web"
+	"github.com/james-millner/go-lang-web-app/pkg/web"
 )
 
 // ComprehendDTO

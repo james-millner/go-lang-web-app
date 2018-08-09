@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/iqblade/casestudies/pkg/model"
-	"github.com/iqblade/casestudies/pkg/web"
+	"github.com/james-millner/go-lang-web-app/pkg/model"
+	"github.com/james-millner/go-lang-web-app/pkg/web"
 )
 
 //GatherLinks function used to process links for a given URL.
