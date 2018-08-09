@@ -12,16 +12,6 @@ import (
 	"strconv"
 	"time"
 
-<<<<<<< HEAD
-	"github.com/james-millner/go-lang-web-app/pkg/es"
-	"github.com/james-millner/go-lang-web-app/pkg/handlers"
-	"github.com/james-millner/go-lang-web-app/pkg/model"
-	"github.com/james-millner/go-lang-web-app/pkg/service"
-
-	"github.com/james-millner/go-lang-web-app/pkg/db"
-
-=======
->>>>>>> master
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/go-tika/tika"
 	"github.com/gorilla/mux"

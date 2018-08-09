@@ -1,12 +1,6 @@
 package handlers
 
 import (
-<<<<<<< HEAD
-	"github.com/james-millner/go-lang-web-app/pkg/es"
-	"github.com/james-millner/go-lang-web-app/pkg/service"
-
-=======
->>>>>>> master
 	"github.com/google/go-tika/tika"
 	"github.com/james-millner/go-lang-web-app/pkg/es"
 	"github.com/james-millner/go-lang-web-app/pkg/service"
