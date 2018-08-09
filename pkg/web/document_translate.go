@@ -21,18 +21,9 @@ func RetreiveLinksFromDocument(url string, doc *goquery.Document) []string {
 		//log.Printf("%s - %v", link, exists)
 		if exists {
 			//Only get links containing a protocol
-			if strings.Contains(link, "http") && !ArrayContains(links, link) {
+			if !ArrayContains(links, link) {
 				links = append(links, link)
 			}
-
-			if !strings.Contains(link, "http") {
-				formattedURL := url + link
-
-				if strings.Contains(formattedURL, "http") && !ArrayContains(links, formattedURL) {
-					links = append(links, formattedURL)
-				}
-			}
-
 		}
 	})
 
