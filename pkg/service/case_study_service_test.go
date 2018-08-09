@@ -4,9 +4,8 @@ import (
 	"testing"
 
 	"github.com/google/go-tika/tika"
-	"github.com/stretchr/testify/assert"
-
 	"github.com/iqblade/casestudies/pkg/db"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewService(t *testing.T) {
