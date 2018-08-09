@@ -6,7 +6,7 @@ import (
 	"github.com/google/go-tika/tika"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/james-millner/go-lang-web-app/pkg/db"
+	"github.com/iqblade/casestudies/pkg/db"
 )
 
 func TestNewService(t *testing.T) {

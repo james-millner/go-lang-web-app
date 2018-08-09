@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/james-millner/go-lang-web-app/pkg/model"
+	"github.com/iqblade/casestudies/pkg/model"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -27,8 +27,8 @@ func TestTranslateToElastic(t *testing.T) {
 	assert.Equal(t, caseStudyObj.CaseStudyText, caseStudyDTO.CaseStudyText)
 	assert.Equal(t, caseStudyObj.CompanyNumber, caseStudyDTO.CompanyNumber)
 	assert.Equal(t, caseStudyDTO.CreatedAt, "2014-11-12")
-	assert.Equal(t, caseStudyDTO.UpdatedAt,  "2014-11-12")
-	assert.Equal(t, caseStudyDTO.IdentifiedOn,  "2014-11-12")
+	assert.Equal(t, caseStudyDTO.UpdatedAt, "2014-11-12")
+	assert.Equal(t, caseStudyDTO.IdentifiedOn, "2014-11-12")
 	assert.Equal(t, caseStudyObj.Title, caseStudyDTO.Title)
 	assert.Len(t, caseStudyDTO.Organizations, 1)
 

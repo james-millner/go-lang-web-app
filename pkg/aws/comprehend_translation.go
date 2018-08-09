@@ -1,7 +1,7 @@
 package aws
 
 import (
-	"github.com/james-millner/go-lang-web-app/pkg/web"
+	"github.com/iqblade/casestudies/pkg/web"
 
 	"github.com/aws/aws-sdk-go-v2/service/comprehend"
 )

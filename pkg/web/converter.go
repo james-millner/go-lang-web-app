@@ -1,6 +1,6 @@
 package web
 
-import "github.com/james-millner/go-lang-web-app/pkg/model"
+import "github.com/iqblade/casestudies/pkg/model"
 
 //TranslateToElastic method converts a model.CaseStudy object into a DTO to be returned as a response body.
 func TranslateToElastic(obj model.CaseStudy) model.CaseStudyDTO {
