@@ -12,12 +12,12 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/james-millner/go-lang-web-app/pkg/es"
-	"github.com/james-millner/go-lang-web-app/pkg/handlers"
-	"github.com/james-millner/go-lang-web-app/pkg/model"
-	"github.com/james-millner/go-lang-web-app/pkg/service"
+	"github.com/iqblade/casestudies/pkg/es"
+	"github.com/iqblade/casestudies/pkg/handlers"
+	"github.com/iqblade/casestudies/pkg/model"
+	"github.com/iqblade/casestudies/pkg/service"
 
-	"github.com/james-millner/go-lang-web-app/pkg/db"
+	"github.com/iqblade/casestudies/pkg/db"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/go-tika/tika"

@@ -10,7 +10,7 @@ jobs:
   test:
     docker:
       - image: circleci/golang:1.10
-    working_directory: /go/src/github.com/james-millner/go-lang-web-app
+    working_directory: /go/src/github.com/iqblade/casestudies
     steps:
       - checkout
       - run: make clean

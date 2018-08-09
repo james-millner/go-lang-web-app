@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/james-millner/go-lang-web-app/pkg/model"
+	"github.com/iqblade/casestudies/pkg/model"
 
 	"github.com/olivere/elastic"
 )
