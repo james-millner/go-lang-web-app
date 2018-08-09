@@ -45,6 +45,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 		if oserr != nil {
 			e := fmt.Errorf("Error with creating OS file: %v", oserr)
 			log.Fatal(e)
+			enc.Encode(&model.CaseStudyDTO{})
 			return
 		}
 
@@ -52,6 +53,7 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 		if err != nil {
 			e := fmt.Errorf("Error with GET request: %v", err)
 			log.Fatal(e)
+			enc.Encode(&model.CaseStudyDTO{})
 			return
 		}
 
@@ -76,28 +78,35 @@ func (cs *CaseStudyService) ProcessCaseStudyLink() func(w http.ResponseWriter, r
 			if metaErr != nil {
 				e := fmt.Errorf("Error with Meta Data grab: %v", metaErr)
 				log.Fatal(e)
-			}
 
-			if err != nil && metaErr != nil {
-				e := fmt.Errorf("Error with TikaClient parse: %v", err)
-				log.Fatal(e)
+				enc.Encode(&model.CaseStudyDTO{})
+
+				return
 			} else {
 
-				body := strip.StripTags(body)
+				if err != nil && metaErr != nil {
+					e := fmt.Errorf("Error with TikaClient parse: %v", err)
+					log.Fatal(e)
+				} else {
 
-				caseStudyObj := cs.saveCaseStudy(body, url, companyNumber, meta)
+					body := strip.StripTags(body)
 
-				dto := web.TranslateToElastic(*caseStudyObj)
+					caseStudyObj := cs.saveCaseStudy(body, url, companyNumber, meta)
 
-				ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
+					dto := web.TranslateToElastic(*caseStudyObj)
 
-				esErr := cs.es.PutRecord(ctx, dto)
+					ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
 
-				if esErr != nil {
-					log.Fatalf("failed to put record into elasticsearch: %v", err)
+					esErr := cs.es.PutRecord(ctx, dto)
+
+					if esErr != nil {
+						log.Fatalf("failed to put record into elasticsearch: %v", err)
+					}
+
+					log.Panicln("Success: " + dto.ID)
+
+					enc.Encode(dto)
 				}
-
-				enc.Encode(dto)
 			}
 		}
 	}
